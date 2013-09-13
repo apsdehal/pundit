@@ -643,16 +643,16 @@ ul.pundit-items li.dojoDndItemOver, ul.pundit-items li.pundit-items-selected {
  *********************************************************************/
 
 #pundit-aw {
-	position: absolute;
-	right: 0px;
-	bottom: 0px;
-	height: 100%;
-	z-index: 1995;
-	border-left: 1px dotted #000;
-	-webkit-transition-property: width, box-shadow, margin-top;
-	-webkit-transition-duration: 1s, 1s, 1s;
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    height: 100%;
+    z-index: 1995;
+    border-left: 1px dotted #000;
+    -webkit-transition-property: width, box-shadow, margin-top;
+    -webkit-transition-duration: 1s, 1s, 1s;
     -moz-transition-property: width, box-shadow, margin-top;
-	-moz-transition-duration: 1s, 1s, 1s;
+    -moz-transition-duration: 1s, 1s, 1s;
 }
 
 /* TODO: these are obsoleted by the new semlib window resize method */
@@ -664,17 +664,17 @@ body.pundit-gui-hidden #pundit-aw {
 }
 
 #pundit-aw.startup {
-	display: none;
+    display: none;
 }
 #pundit-aw.pundit-hidden {
-	top: 0px;
-	width: 0px;
-	background: rgba(0,0,0, .80);
+    top: 0px;
+    width: 0px;
+    background: rgba(0,0,0, .80);
 }
 #pundit-aw.pundit-shown {
-	top: 0px;
-	width: 300px;
-	background: rgba(0,0,0, .70);
+    top: 0px;
+    width: 300px;
+    background: rgba(0,0,0, .70);
 }
 
 #pundit-aw div.pundit-shown-content {
@@ -757,13 +757,22 @@ body.pundit-gui-hidden #pundit-aw {
 	overflow: hidden;
 }
 
+#pundit-aw .pundit-broken-ann .pundit-aw-panel-header {
+    background-color: #fc0;
+}
+
+#pundit-aw .pundit-broken-ann .pundit-error-msg {
+    background: rgba(255,0,0,0.5) url('img/exclamation-button.png') no-repeat 2px 15px;
+    padding-left: 24px;
+}
+
 #pundit-aw .pundit-aw-panel-header {
     background-color: #009bff;
     min-height: 20px;
     display: block;
-	color: #222;
-	padding: 3px;
-	line-height: 20px;
+    color: #222;
+    padding: 3px;
+    line-height: 20px;
 }
 
 #pundit-aw .pundit-aw-panel .pundit-aw-panel-header span.pundit-aw-panel-title {

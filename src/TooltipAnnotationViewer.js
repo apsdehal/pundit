@@ -23,7 +23,8 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
         hideMouseLeaveMS: 500,
         enableHighlightingMode: true,
         highlightingMode: false,
-        showInvalidXPointers: false
+        showInvalidXPointers: false,
+        allowAnnotationEdit: false
     },
 
     constructor: function(options) {
@@ -179,32 +180,27 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
     initContextualMenu: function() {
         var self = this;
 
-		cMenu.addAction({
+        if (self.opts.showInvalidXPointers) {
+            cMenu.addAction({
+                type: ['punditThisPageMenu'],
+                name: 'showAllBrokenAnnotations',
+                label: 'Show broken annotations',
+                showIf: function() {
+                    return self.invalidXpointers.length > 0;
+                },
+                onclick: function() {
+                    _PUNDIT.tooltipViewer.showAllBrokenAnnotations();
+                    return true;
+                }
+            });
+        }
+
+        cMenu.addAction({
             type: ['annotatedtextfragment'],
             name: 'openAll',
             label: 'Show all annotations on this item',
             showIf: function(item) { 
                 return true;
-                /*
-                var toCheck = item.value;
-                // TODO: hack to support image fragment anntoations: TO REMOVE
-                if (item.rdftype.indexOf(ns.fragments.image) !== -1) {
-                    toCheck = semlibImageFragmentHandler.getParentImageXpointer(item.value);
-                } 
-				if (typeof(self.xpointersAnnotationsId[toCheck]) !== 'undefined'){
-                    var ann = self.xpointersAnnotationsId[toCheck].length,
-                    open = semlibWindow.getOpenedPanelsByXpointer(toCheck).length;
-                    return open < ann;
-                }else{
-                    return false;
-                }
-                */
-                
-				/*	
-		        var ann = self.xpointersAnnotationsId[xp].length,
-		            open = semlibWindow.getOpenedPanelsByXpointer(xp).length;
-		        return open < ann;
-				*/
             },
             onclick: function(item) {
                 var toShow = item.value;
@@ -364,6 +360,17 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                 return this.annotations[xp];
     },
 
+    showAllBrokenAnnotations: function() {
+        var self = this;
+        
+        for (var i=self.invalidAnnIds.length; i--;) {
+            var id = self.invalidAnnIds[i];
+            console.log('Showing BROKEN ann '+id);
+            self.showAnnotationPanel(id, null);
+        }
+        
+    },
+
     showAllAnnotations: function() {
         var self = this;
         
@@ -376,7 +383,6 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
             var annId = self.annIds[i];
                 self.showAnnotationPanel(annId); 
         }
-        
     },
     
     removeTargetFromAnnotation: function(uri, ann_id) {
@@ -413,81 +419,37 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
     showAnnotationPanel: function(ann_id, clickedXP) {
         var self = this,
             panel_id = 'dialog_'+ann_id+'_content';
-		
+
         // Is the panel already there?
         if (dojo.query('#'+panel_id).length > 0) {
-
-            // TODO: flash the panel window?
-            //DEBUG ??? Why set the Xpointer if is already there????
-            //semlibWindow.setPositioningXpointer(panel_id, clickedXP);
- 			//semlibWindow.positionPanels();
             self.log("Panel for annotation id "+ann_id+" is already open!");
             return;
         }
-		
+
         var ann = self.annotations[ann_id],
             panel_content = '',
             panel_buttons = '',
             c = ann.content,
             m = ann.metadata,
-			items = ann.items,
-			notebook_url = m[ns.pundit_isIncludedIn][0].value,
-			notebook_id = notebook_url.split("/")[notebook_url.split("/").length-1],
+            items = ann.items,
+            notebook_url = m[ns.pundit_isIncludedIn][0].value,
+            notebook_id = notebook_url.split("/")[notebook_url.split("/").length-1],
             panelXpointers = [],
             author_name,
             author_uri = m[ns.pundit_authorURI][0].value,
-            annotation_date = m[ns.pundit_annotationDate][0].value;
-		
-		/*
-		if (items == null) {
-			throw "Pundit-DataNotReady";
-		}
-		*/
-		
+            annotation_date = m[ns.pundit_annotationDate][0].value,
+            isBroken = false;
+
         self.log("Showing annotation panel for "+ann_id);
 
-        // TODO: ACL on the annotation? On the notebook?
-        // TODO: add again the EDIT button
-        // panel_buttons += "<span class='swButton edit' about='"+ann_id+"'>Edit</span>";
-        if (author_uri === myPundit.user.uri) {
-            panel_buttons += "<span class='pundit-gui-button delete' about='"+ann_id+"'>Delete</span>";
-		}	
-		
-		if (_PUNDIT.config.modules['pundit.NotebookManager'].active === true && _PUNDIT.config.modules['pundit.NotebookManager'].activateFromAnnotations === true) {
-		
-			if (self.isNotebookActive(notebook_id)) {
-				panel_buttons += "<span class='pundit-gui-button deactivate' about='"+notebook_id+"'>Deactivate</span>";
-			} else {
-				panel_buttons += "<span class='pundit-gui-button activate' about='"+notebook_id+"'>Activate</span>";
-			}
-			
-		}
-			
-
-		if (typeof(m[ns.pundit_authorName]) !== 'undefined' && m[ns.pundit_authorName][0].value !== '') 
-			author_name = m[ns.pundit_authorName][0].value;
-		else 
-			author_name = "User: " + author_uri.substr(author_uri.lastIndexOf('/')+1, author_uri.length);
-
-        // Header with metadata
-        panel_content += "<div class='pundit-metadata'>";
-        // DEBUG: if we remove a line here, the min-height of the whole annotation box gets in the
-        // way and messes it up a bit .......
-        // TODO: this is the right place to insert notebook or other infos
-        panel_content += "<span class='author'><em>Created by</em> : "+author_name+"</span>";
-        panel_content += "<span class='date'><em>On</em> : "+ annotation_date.split('T')[0] +", "+annotation_date.split('T')[1]+"</span>"
-		panel_content += "<span class='author'><em>ID</em> : "+ann_id+"</span>";
-        panel_content += "</div>";
-
-		
         var relXps = [];
         for (var i = m[ns.pundit_hasTarget].length; i--;) {
             if (m[ns.pundit_hasTarget][i]['value'] !== window.location.href)
                 relXps.push(m[ns.pundit_hasTarget][i]['value']);
-		}
-		
-		self.log('Annotation with '+relXps.length+' targets');
-		
+        }
+
+        self.log('Annotation with '+relXps.length+' targets');
+
         // For each collected xpointer: setup colors, classes, coords etc..
         for (i = relXps.length; i--;) {
             var uri = relXps[i];
@@ -498,11 +460,12 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
             if ((typeof(self.xpointersClasses[uri]) === 'undefined')) {
                 self.log("ERROR: trying to show annotation panel for "+uri+" but its not consolidated on this page");
                 self.removeTargetFromAnnotation(uri, ann_id);
-				if (!(self.annotationHasTargets(ann_id))) {
-					//TODO: this case has to be addressed with some message to the user in future versions
-  					self.log("ERROR: none of the annotation target is present in the page (ann_id: " + ann_id + ")");	
-					return;
-				}
+                if (!(self.annotationHasTargets(ann_id))) {
+                    // TODO: this case has to be addressed with some message to the user in future versions
+                    self.log("ERROR: none of the annotation target is present in the page (ann_id: " + ann_id + ")");
+                    isBroken = true;
+                    // return;
+                }
                 continue;
             } else {
                 
@@ -510,33 +473,70 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
 
                 // consolidated xpointers selected by this panel (used later on when closing)
                 panelXpointers.push(uri);
-							
+
                 // Colors for the fragments: if this fragment hasnt been highlighted, pick
                 // a new color from the stack and initialize usedColors at 1. If it's already 
                 // highlighted, use this same color and just add 1 to usedColors.
                 if (typeof(self.xpointersColors[uri]) === 'undefined') {
                     self.xpointersColors[uri] = self.colors.pop() || self.fallbackColor;
                     self.usedColors[self.xpointersColors[uri]] = 1;
-    				self.log('Assigned color to target: '+self.xpointersColors[uri]);
+                    self.log('Assigned color to target: '+self.xpointersColors[uri]);
                 } else 
                     self.usedColors[self.xpointersColors[uri]] = self.usedColors[self.xpointersColors[uri]] + 1;
 
                 dojo.query('span.'+cl).addClass(self.xpointersColors[uri]);
             }
         } // for i in relXps
-	
+
+
+        // TODO: ACL on the annotation? On the notebook?
+        // TODO: add again the EDIT button
+        if (author_uri === myPundit.user.uri) {
+            panel_buttons += "<span class='pundit-gui-button delete' about='"+ann_id+"'>Delete</span>";
+
+            if (self.opts.allowAnnotationEdit)
+                panel_buttons += "<span class='pundit-gui-button edit' about='"+ann_id+"'>Edit</span>";
+        }
+
+
+        if (_PUNDIT.config.modules['pundit.NotebookManager'].active === true && _PUNDIT.config.modules['pundit.NotebookManager'].activateFromAnnotations === true) {
+            if (self.isNotebookActive(notebook_id)) {
+                panel_buttons += "<span class='pundit-gui-button deactivate' about='"+notebook_id+"'>Deactivate</span>";
+            } else {
+                panel_buttons += "<span class='pundit-gui-button activate' about='"+notebook_id+"'>Activate</span>";
+            }
+        }
+
+        if (typeof(m[ns.pundit_authorName]) !== 'undefined' && m[ns.pundit_authorName][0].value !== '') 
+            author_name = m[ns.pundit_authorName][0].value;
+        else 
+            author_name = "User: " + author_uri.substr(author_uri.lastIndexOf('/')+1, author_uri.length);
+
+        // Header with metadata
+        panel_content += "<div class='pundit-metadata'>";
+        // DEBUG: if we remove a line here, the min-height of the whole annotation box gets in the
+        // way and messes it up a bit .......
+        // TODO: this is the right place to insert notebook or other infos
+        if (isBroken) {
+            panel_content += "<span class='pundit-error-msg'>Apparently, this annotation should be shown on this page, but Pundit is not able to show it properly.</span>";
+        }
+        panel_content += "<span class='author'><em>Created by</em> : "+author_name+"</span>";
+        panel_content += "<span class='date'><em>On</em> : "+ annotation_date.split('T')[0] +", "+annotation_date.split('T')[1]+"</span>"
+        panel_content += "<span class='author'><em>ID</em> : "+ann_id+"</span>";
+        panel_content += "</div>";
+
         // Produce the statements html: at this stage the .content hash has a field for
         // each subject used in statements. 
-		panel_content += self.getStatementsHTML(c, items);
-	        
+        panel_content += self.getStatementsHTML(c, items);
+        
         var closeFunction = (function(uris, id){
             return function() {
                 // Foreach fragment uri used in this annotation, remove
                 // the color class from the related span bits
                 for (var i = uris.length; i--;) {
                     var cl = self.xpointersClasses[uris[i]].join(''),
-                    color = self.xpointersColors[uris[i]];
-						
+                        color = self.xpointersColors[uris[i]];
+
                     if (self.usedColors[color] === 1) {
                         dojo.query('span.'+cl).removeClass(color);
                         delete self.xpointersColors[uris[i]];
@@ -544,7 +544,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                             self.colors.push(color);
                     } else 
                         self.usedColors[color] = self.usedColors[color] - 1;
-						
+
                 }
                 dojo.destroy(id);
                 delete semlibWindow.panels[id];
@@ -552,6 +552,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
             }
         })(panelXpointers, panel_id);
 
+        self.log("Adding new annotation window item, with id "+panel_id);
         // When everything is ready, we can append the content to the annotation
         // window, which will position it correclty
         semlibWindow.awAdd({
@@ -561,18 +562,19 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
             xpointers: panelXpointers,
             positioningXpointer: clickedXP || panelXpointers[0],
             title: "By " + author_name + " on " + annotation_date.split("T")[0],
-            onClose: closeFunction
+            onClose: closeFunction,
+            isBroken: isBroken
         });
-				
+
         dojo.behavior.apply();
 
         if (!semlibWindow.isAnnotationWindowOpen())
             semlibWindow.toggleAnnotationWindow();
         
     }, // showAnnotationPanel()
-	
-	/**
-	* @method addHyperlinksToText
+
+    /**
+    * @method addHyperlinksToText
     * @description Searches for http urls in the text and turns them into HTML hyperlinks.
     * @param text {string} 
     * @return {string}
@@ -997,7 +999,11 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
         
         // List of consolidated xpointers
         self.xpointers = [];
-
+        
+        // Not consolidated ones
+        self.invalidXpointers = [];
+        self.invalidAnnIds = [];
+        
         // TODO: merge all of these in a single object maybe even into the .xpointers field ..
         self.xpointersClasses = {};
         self.xpointersColors = {};
@@ -1005,11 +1011,11 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
 
         // DEBUG: why do we need this? :|
         // self.xpointersContent = {};
-		
+
         self.xpaths = [];
         self.annotations = {};
         self.contentURIs = [];
-		
+
         // TODO: create more classes in the css or find a clever solution to make them
         // dinamically starting from rgb color values
         self.colors = ['col1', 'col2', 'col3', 'col4', 'col5', 'col6', 'col7', 'col9', 'col10', 'col11', 'col12', 'col13', 'col14', 'col15', 'col16', 'col17', 'col18', 'col19', 'col20', 'col21', 'col22', 'col23', 'col24', 'col25'];
@@ -1171,7 +1177,8 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
         if (self.opts.showInvalidXPointers === true) {
             console.log('-----------------------------------------------')
             console.log('BROKEN ANNOTATIONS FOR '+self.invalidXpointers.length+' XPOINTERS');
-            for (var i in self.invalidXpointers) {
+            self.invalidAnnIds = [];
+            for (var i=self.invalidXpointers.length; i--;) {
                 var xp = self.invalidXpointers[i],
                     anns = self.xpointersAnnotationsId[xp];
                 for (var j in anns) {
@@ -1185,6 +1192,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                         label = self.annotations[id].items[xp][_PUNDIT.ns.items.label][0].value;
                     } catch(e) {}
                     console.log('BROKEN ANN '+id+' ('+author+', '+date+', nb '+nb+'): '+label);
+                    self.invalidAnnIds.push(id);
                 }
             }
         }

@@ -692,16 +692,16 @@ dojo.declare("pundit.GUI", pundit.BaseComponent, {
             positioningXpointer: o.positioningXpointer,
             trackXPs: o.xpointers,
             close: o.onClose,
-            expanded: true
+            expanded: true,
+            isBroken: o.isBroken
         };
         
-        //for (var i in o.xpointers) {
         for (var i = o.xpointers.length; i--;) {
             var color = tooltip_viewer.xpointersColors[o.xpointers[i]];
             colorButtons += '<span id="pundit-aw-button-color-'+color+'-'+o.id+'" class="pundit-button-color '+color+'">'+color+'</span>';
         }
 
-        c += "<div class='pundit-aw-panel' id='"+o.id+"'>";
+        c += "<div class='pundit-aw-panel "+(o.isBroken ? "pundit-broken-ann" : "")+"' id='"+o.id+"'>";
         c += "<div class='pundit-aw-panel-buttons'>"+colorButtons + o.buttons+"</div>";
         c += "<div class='pundit-aw-panel-header'>";
         //Add page icon
