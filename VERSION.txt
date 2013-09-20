@@ -1,3 +1,9 @@
+0.15.2-MaintainedEgg
+* Showing broken annotations
+* Option to sort vocabolaries
+* Changed some defaults in some selector (korbo)
+* Rebuilt the bookmarklet
+
 0.15.1-HatchedEgg
 * Tackled a nasty bug on xpointers creation
 * Supporting freebase again, using the new APIs
