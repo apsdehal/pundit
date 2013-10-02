@@ -271,6 +271,7 @@ dojo.declare("pundit.Init", pundit.BaseComponent, {
             dojo.require("pundit.selectors.DBPediaSelector");
             dojo.require("pundit.selectors.FreebaseSelector");
             dojo.require("pundit.selectors.KorboBasketSelector");
+            dojo.require("pundit.selectors.MurucaSelector");
             dojo.require("pundit.selectors.WordnetSelector");
             dojo.require("pundit.selectors.EuropeanaSelector");
             dojo.require("pundit.selectors.EuropeanaEDMSelector");
@@ -282,8 +283,13 @@ dojo.declare("pundit.Init", pundit.BaseComponent, {
         // Used for other components initialization
         p.config.activeSelectorsName = [];
         for (var se in p.config.modules.selectors) {
-
             var conf = p.config.modules.selectors[se];
+
+            // if (p.configuration._isArray(conf)) {
+                // TODO: to let the system istantiate more than 1 copy of a same selector
+                // If it's an array, iterate over it and instantiate N selectors, not just 1
+            //}
+
             if (conf.active === true) {
                 self.log('Loading selector ' + se);
                 _foorequire('pundit.selectors.' + se + 'Selector');
