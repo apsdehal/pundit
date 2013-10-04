@@ -20,26 +20,23 @@
 
 var punditConfig = {
 
-    debugAllModules: true,
+    debugAllModules: false,
 
     annotationServerBaseURL : 'http://demo.as.thepund.it:8080/annotationserver/',
 
-    // witt: 81, rest: 84
-    vocabularies: [
-        // "http://korbo.netseven.it/88?jsonp=_PUNDIT.vocab.initJsonpVocab",
-        // "http://korbo.netseven.it/91?jsonp=_PUNDIT.vocab.initJsonpVocab"
-        // "https://dl.dropbox.com/u/769042/net7/Bur-Relations-130301.pundit.jsonp"
-        "http://korbo.netseven.it/84?jsonp=_PUNDIT.vocab.initJsonpVocab",
-    ],
+    vocabularies: [],
 
     useBasicRelations: true,
 
     modules: {
 
         'pundit.TooltipAnnotationViewer': {
+            showInvalidXPointers: false,
+            allowAnnotationEdit: true,
             debug: false
         },
         'pundit.NamedContentHandler': {
+            active: false,
             debug: false
         },
         
@@ -58,7 +55,6 @@ var punditConfig = {
                 }
             ]
         },
-        
 
         'pundit.NotebookManager': {
             active: false
@@ -79,7 +75,6 @@ var punditConfig = {
             active: true,
             enableEntitiesExtraction: true
         },
-        
         'pundit.selectors.VocabSelector': {
             debug: false
         },
@@ -87,15 +82,8 @@ var punditConfig = {
         'selectors': {
             
             'EuropeanaEDM': {
-                name: 'europeanaEDM', label: 'Europeana EDM', active: true
-            },
-            
-            'KorboBasket': {
-                name: 'korbo', 
-                label: 'Korbo search', 
-                active: true,
-                baskets: [82]
-            }            
+                name: 'europeanaEDM', label: 'Europeana EDM', active: false
+            }
         },
         'annotators': {}
     }

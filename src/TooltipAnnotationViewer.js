@@ -180,7 +180,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
     initContextualMenu: function() {
         var self = this;
 
-        if (self.opts.showInvalidXPointers) {
+        if (self.opts.showInvalidXPointers === true) {
             cMenu.addAction({
                 type: ['punditThisPageMenu'],
                 name: 'showAllBrokenAnnotations',
@@ -495,7 +495,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
             panel_buttons += "<span class='pundit-gui-button delete' about='"+ann_id+"'>Delete</span>";
 
             if (self.opts.allowAnnotationEdit)
-                panel_buttons += "<span class='pundit-gui-button edit' about='"+ann_id+"'>Edit</span>";
+                panel_buttons += "<span class='pundit-gui-button edit' data-nbId='"+notebook_id+"' data-annId='"+ann_id+"'>Edit</span>";
         }
 
 
@@ -518,7 +518,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
         // way and messes it up a bit .......
         // TODO: this is the right place to insert notebook or other infos
         if (isBroken) {
-            panel_content += "<span class='pundit-error-msg'>Apparently, this annotation should be shown on this page, but Pundit is not able to show it properly.</span>";
+            panel_content += "<span class='pundit-error-msg'>Apparently, this annotation should be shown on this page, sadly Pundit is not able to handle it properly. :(</span>";
         }
         panel_content += "<span class='author'><em>Created by</em> : "+author_name+"</span>";
         panel_content += "<span class='date'><em>On</em> : "+ annotation_date.split('T')[0] +", "+annotation_date.split('T')[1]+"</span>"
@@ -1406,21 +1406,30 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                     self.removeHighlightByXpointer(dojo.attr(e.currentTarget, 'about'))
                 }
             },
+            '#pundit-tc-reset-button': {
+                'click': function() {
+                    tripleComposer.clearDnDTriples();
+                    dojo.query('#pundit-tc-container').removeClass("pundit-edit-mode");
+                    _PUNDIT.tripleComposer.isEditing = false;
+                }
+            },
             'div.pundit-aw-panel-buttons span.edit': {
                 'click': function(e) {
-                    alert('non implemented yet.');
+                    var annId = dojo.attr(e.currentTarget, 'data-annId'),
+                        nbId = dojo.attr(e.currentTarget, 'data-nbId');
+                    self.editAnnotation(nbId, annId);
                 }
             },
-			'div.pundit-aw-panel-buttons span.activate': {
+            'div.pundit-aw-panel-buttons span.activate': {
                 'click': function(e) {
                     var notebook_id = dojo.attr(e.currentTarget, 'about');
-					self.writer.setNotebookActive(notebook_id, "1");
+                    self.writer.setNotebookActive(notebook_id, "1");
                 }
             },
-			'div.pundit-aw-panel-buttons span.deactivate': {
+            'div.pundit-aw-panel-buttons span.deactivate': {
                 'click': function(e) {
                     var notebook_id = dojo.attr(e.currentTarget, 'about');
-					self.writer.setNotebookActive(notebook_id, "0");
+                    self.writer.setNotebookActive(notebook_id, "0");
                 }
             },
             'div.pundit-aw-panel-buttons span.delete': {
@@ -1454,9 +1463,56 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
         
     }, // initBehaviours()
 
+    editAnnotation: function(nbId, annId) {
+        var self = this,
+            ann = self.annotations[annId].content,
+            triples = 0;
+        
+        self.log('Editing annotation '+annId+' from notebook '+nbId);
+        console.log('Annotation to edit ', ann);
+
+        _PUNDIT.tripleComposer.isEditing = annId;
+
+        dojo.query('#pundit-tc-edit-msg')[0].innerHTML = "Editing annotation "+annId;
+        dojo.query('#pundit-tc-container').addClass("pundit-edit-mode");
+        
+        tripleComposer.clearDnDTriples();
+    
+        for (var sUri in ann) {
+            for (var pUri in ann[sUri]) {
+                for (var oUri in ann[sUri][pUri]) {
+                    var ob = ann[sUri][pUri][oUri],
+                        s = semlibItems.getItemFromUri(sUri), 
+                        p = semlibItems.getItemFromUri(pUri), 
+                        o;
+                    
+                    if (ob.type === "uri") {
+                        o = semlibItems.getItemFromUri(ob.value);
+                    } else {
+                        o = semlibLiterals.createLiteralItem(ob.value);
+                    }
+                    
+                    triples++;
+                    
+                    if (tripleComposer.getNumberOfTriples() !== triples)
+                        tripleComposer.addDnDTriple();
+
+                    tripleComposer.addItemToSubject(s);
+                    tripleComposer.addItemToPredicate(p);
+                    tripleComposer.addItemToObject(o);
+                    
+                }
+            }
+        }
+        
+        if (!_PUNDIT.GUI.isWindowOpen())
+            _PUNDIT.GUI.toggleWindow();
+        
+    }, // editAnnotation()
+
     addAnnotations : function(graph) {
         var self = this,
-			nAnn = 0, 
+            nAnn = 0, 
             nXps = 0, 
             annIds = [];
 

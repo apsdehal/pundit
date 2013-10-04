@@ -499,7 +499,7 @@ ul.pundit-items li.dojoDndItemOver, ul.pundit-items li.pundit-items-selected {
 }
 
 /*********************************************************************
- ****** PUNDIT
+ ****** Triple Composer
  *********************************************************************/
 
 
@@ -595,6 +595,28 @@ ul.pundit-items li.dojoDndItemOver, ul.pundit-items li.pundit-items-selected {
 #pundit-tc-container .pundit-tc-dnd-container li.dojoDndItem {
     font-size: 0.8em;
 }
+
+#pundit-tc-reset-button {
+    float: right;
+    display: none;
+}
+#pundit-tc-edit-msg {
+    float: right;
+    background: rgba(255, 0, 0, 0.8) url('img/exclamation-button.png') no-repeat 2px 2px;
+    border-radius: 3px;
+    height: 21px;
+    line-height: 21px;
+    padding-left: 20px;
+    padding-right: 3px;
+    margin-right: 2px;
+    color: white;
+    display: none;
+}
+
+#pundit-tc-container.pundit-edit-mode #pundit-tc-reset-button, 
+#pundit-tc-container.pundit-edit-mode #pundit-tc-edit-msg {
+    display: inline-block;
+} 
 
 
 /*********************************************************************

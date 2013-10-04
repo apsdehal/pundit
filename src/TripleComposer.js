@@ -46,6 +46,8 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
         pu += '    <div class="pundit-tab-header">';
         pu += '      <span class="pundit-gui-button" id="pundit-tc-save-button"><span class="pundit-bicon pundit-save-icon"></span><span>Save</span></span>';
         pu += '      <span class="pundit-gui-button" id="pundit-tc-add-triple-button"><span class="pundit-bicon pundit-add-triple-icon"></span>Add a new triple</span>';
+        pu += '      <span class="pundit-gui-button" id="pundit-tc-reset-button"><span>Reset</span></span>';
+        pu += '      <span id="pundit-tc-edit-msg">Editing annotation XY</span>';
         pu += '    </div>';
         pu += '    <div id="pundit-tc-labels-container" class="pundit-stop-wheel-propagation">';
         pu += '        <div style="position:absolute;margin-left:6px">Subject</div>';
@@ -1122,8 +1124,8 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
                         if (ov.indexOf('#xpointer(') !== -1 && dojo.indexOf(targets, ov) === -1)
                             targets.push(ov);
                         
-                        //TODO: remove this. It is a trick to visualiza image fragments annotations 
-                        //by setting the xpointer of the complete image as target of the annotation
+                        // TODO: remove this. It is a trick to visualiza image fragments annotations 
+                        // by setting the xpointer of the complete image as target of the annotation
                         if (_PUNDIT.config.isModuleActive("pundit.ImageFragmentHandler")) {
                             var parentImageXpointer = semlibImageFragmentHandler.getParentImageXpointer(sv);
                             if (typeof(parentImageXpointer) !== 'undefined') {
@@ -1135,7 +1137,7 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
                             }
                         }
                         
-                        //Handle image fragment
+                        // Handle image fragment
                         if (dojo.indexOf(sd.rdftype, ns.fragments.image) !== -1){
                             targets.push(sv);
                         }
@@ -1143,7 +1145,7 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
                             targets.push(ov);
                         }
                         
-                        //Handle page annotations
+                        // Handle page annotations
                         if (dojo.indexOf(sd.rdftype, ns.page) !== -1){
                             targets.push(sv);
                         }
@@ -1159,11 +1161,19 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
 
         self.log('Saving current: '+dojo.toJson(b.getTalisJson()));
         
+        if (self.isEditing) {
+            self.saver.deleteAnnotation(self.isEditing, function() {
+                self.log('Deleted annotation '+self.isEditing);
+                semlibWindow.destroyPanelById(self.isEditing);
+                self.isEditing = false;
+                dojo.query('#pundit-tc-container').removeClass("pundit-edit-mode");
+            });
+        }
+        
         if (!b.isEmpty()) 
             self.saver.writeAnnotationContent(b, targets, annotationPageContext);
         else 
             dojo.query('#pundit-tc-container').removeClass('pundit-panel-loading');
-
 
     }, // saveTriples()
     
@@ -1382,7 +1392,27 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
         }
     },
     
+    addItemToPredicate: function(itemData) {
+        var self = this,
+            selDnd = dojo.query('.pundit-tc-dnd-container :first')[0],
+            completeId = dojo.attr(selDnd, 'id'),
+            item = {data: itemData},
+            id = completeId.substring(12);
+        if (self.tripleDnD[id].p.getAllNodes().length === 0){
+            if (self.rowAcceptItems(id, [item], self.tripleDnD[id].p)){
+                self.tripleDnD[id].p.insertNodes(false, [itemData]);
+                dojo.behavior.apply();
+            }
+        }
+    },
     
+    getNumberOfTriples: function() {
+        var self = this,
+            ret = 0;
+        for (var t in self.tripleDnD)
+            ret++;
+        return ret;
+    },
     
     checkNeedToHideResourcePanel: function(semlibWindowHeight) {
         var self = this;
