@@ -1482,7 +1482,6 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
             triples = 0;
         
         self.log('Editing annotation '+annId+' from notebook '+nbId);
-        console.log('Annotation to edit ', ann);
 
         _PUNDIT.tripleComposer.isEditing = annId;
 
