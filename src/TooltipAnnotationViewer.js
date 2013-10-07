@@ -75,15 +75,15 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
 
     }, // constructor()
     
-	initWriter: function() {
-		var self = this;
-		
-		self.writer.onSetNotebookActive(function(id, flag) { 
-			semlibWindow.closeAllPanels();
-			self.refreshAnnotations();
+    initWriter: function() {
+        var self = this;
+
+        self.writer.onSetNotebookActive(function(id, flag) { 
+            semlibWindow.closeAllPanels();
+            self.refreshAnnotations();
             self.fireOnNotebookActivationChanged();
         });
-	},
+    },
 
     initReader: function() {
         var self = this;
@@ -104,10 +104,12 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                 
                 self.jobId = _PUNDIT.loadingBox.addJob('Downloading annotation content');
                 self.addAnnotations(g);
-				for (var notebook_id in self.notebooks) { //ok object
-					self.reader.checkNotebook(notebook_id);	
-				}
-				
+
+                // ok object
+                for (var notebook_id in self.notebooks) {
+                    self.reader.checkNotebook(notebook_id);
+                }
+
                 self.consolidate();
                 dojo.behavior.apply();
             } else {
@@ -119,25 +121,36 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
         // Second step: addAnnotations is calling AnnotationContent
         // on every valid annotation
         self.reader.onAnnotationContent(function(g, id) {
-			self.log('Annotation content for '+id+' received');
+            self.log('Annotation content for '+id+' received');
             self.addAnnotationContent(id, g);
             self.reader.getAnnotationItemsFromId(id);
         });
         
         self.reader.onAnnotationItems(function(g, id) {
-			self.log('Annotation items for '+id+' received');
+            self.log('Annotation items for '+id+' received');
             self.addAnnotationItems(id, g);
             if (--self.annToDownload === 0) {
                 self.consolidate();
                 _PUNDIT.loadingBox.setJobOk(self.jobId);
                 self.isRefreshingAnnotations = false;
                 self.jobId = null;
+
+                if (_PUNDIT.tripleComposer.tryToShowAnnotation) {
+                    try {
+                        self.showAnnotationPanel(_PUNDIT.tripleComposer.tryToShowAnnotation);
+                        self.log('Showing annotation after full reload.');
+                    } catch (e) {
+                        self.log('Failed to show annotation after full reload.');
+                    }
+                    _PUNDIT.tripleComposer.tryToShowAnnotation = null;
+                }
+
             }
         });
         
         self.reader.onNotebookChecked(function(id, flag) {
-			self.log('Notebook ' + id + ' cheked: active = ' + flag);
-			self.notebooks[id] = flag;
+            self.log('Notebook ' + id + ' cheked: active = ' + flag);
+            self.notebooks[id] = flag;
         });
 
         self.reader.onError(function(e) {
@@ -381,7 +394,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
 
         for (var i=self.annIds.length; i--;) {
             var annId = self.annIds[i];
-                self.showAnnotationPanel(annId); 
+                self.showAnnotationPanel(annId);
         }
     },
     
@@ -1510,7 +1523,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
         
     }, // editAnnotation()
 
-    addAnnotations : function(graph) {
+    addAnnotations: function(graph) {
         var self = this,
             nAnn = 0, 
             nXps = 0, 
@@ -1522,7 +1535,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
         self.annXpointers = [];
         self.annIds = [];
         
-		
+
         for (var ann_uri in graph) {
             
             var a = graph[ann_uri],
@@ -1545,12 +1558,12 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
             ann_targets = a[ns.pundit_hasTarget] || [];
             ann_id = a[ns.pundit_annotationId][0].value;
 
-			var notebook_url = a[ns.pundit_isIncludedIn][0].value;
-			var notebook_id = notebook_url.split("/")[notebook_url.split("/").length - 1];
-			
-			self.notebooks[notebook_id] = null;
-			
-			self.log('Adding annotation '+ann_id+' with '+ann_targets.length+' targets');
+            var notebook_url = a[ns.pundit_isIncludedIn][0].value;
+            var notebook_id = notebook_url.split("/")[notebook_url.split("/").length - 1];
+
+            self.notebooks[notebook_id] = null;
+
+            self.log('Adding annotation '+ann_id+' with '+ann_targets.length+' targets');
             
             // TODO DEBUG: in this cycle annotations without xpointers get lost :(
             if (ann_targets.length === 0){
@@ -1561,7 +1574,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                     metadata: a, 
                     id: ann_id
                 };
-            }else{
+            } else {
                 for (var i = ann_targets.length; i--;) {
                     // val is an xpointer
                     var val = ann_targets[i].value;
@@ -1589,7 +1602,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                         else
                             self.xpointersAnnotationsId[val].push(ann_id);
                     
-                    }else if(val === window.location.href){
+                    } else if (val === window.location.href){
                         //If the target of the annotation is the page than attach the annotation to 
                         //a virtual node on top of the page so that the annotation appear as first  
                         if (dojo.indexOf(self.annIds, ann_id) === -1)
@@ -1603,9 +1616,9 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                             metadata: a, 
                             id: ann_id
                         };
-                    }else{
+                    } else {
                         self.log('Ops, annotation target is not an xpointer?')
-                    // DEBUG TODO: full-page annotations? Other kind of targets?
+                        // DEBUG TODO: full-page annotations? Other kind of targets?
                     }
                 } // for i in ann_targets
             }
@@ -1626,11 +1639,6 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
         }
 
     }, // addAnnotations
-    
-    //Add a single annotation without needing to refresh all annotations
-    addAnnotation:function(annObject){
-        
-    },
     
     isAnnXpointer: function(xp) {
         for (var i = this.annXpointers.length; i--;){

@@ -131,7 +131,6 @@ dojo.declare("pundit.AnnotationWriter", pundit.BaseComponent, {
                     _PUNDIT.loadingBox.setJobKo(jobId);
                     self.log('writeAnnotationItems got an error for '+annotationID);
                     console.log('TODO: writeAnnotationItems ERROR');
-                    // alert("Error posting items");
                     self.fireOnError("DOH");
                 }
             };

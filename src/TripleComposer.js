@@ -98,25 +98,6 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
             self.propSuggestionPanel.hide();
             self.objSuggestionPanel.hide();
         })
-//        self.saver.onSaveItems(function(annotationID) {
-//            self.log('onSaveItems: Saver answered with '+ annotationID);
-//            self.saved = true;
-//        
-//            // On close, remove the highlight, and avoid an opening highlight
-//            // on next consolidate
-//            tooltip_viewer.removeHighlightByXpointer(self.xpTarget);
-//        
-//            // remove the temp xpointer if it's not
-//            // a pundit item already (like coming from the server?).
-//            if (tooltip_viewer.isTempXpointer(self.xpTarget) && !semlibMyItems.uriInItems(self.xpTarget)) {
-//                tooltip_viewer.removeTempXpointer(self.xpTarget);
-//                tooltip_viewer.refreshAnnotations();
-//            }
-//        });
-//        self.saver.onSave(function(m){
-//            self.log('onSave: Saver answered with '+m);
-//            self.saveItems(m);
-//        });
         
         self.initDnD();
         self.initBehaviors();
@@ -140,12 +121,6 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
             self.log('ERROR!!! Saver answered with ' + m);
             dojo.query('#pundit-tc-container').removeClass('pundit-panel-loading');
         });
-//        self.saver.onSave(function(m){
-//            self.log('Saver answered with '+m);
-//            self.fireOnSave();
-//            self.clearDnDTriples();
-//            dojo.query('#pundit-tc-container').removeClass('pundit-panel-loading');
-//        });
                
         self.saver.onSave(function(m){
             self.log('Saver answered with '+m);
@@ -155,6 +130,7 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
         self.saver.onSaveItems(function(annotationID) {
             self.clearDnDTriples();
             dojo.query('#pundit-tc-container').removeClass('pundit-panel-loading');
+            self.tryToShowAnnotation = annotationID;
             self.fireOnSave();
         });
         
@@ -173,27 +149,14 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
         });
                 
         dojo.subscribe("/dnd/start", null, function(s, nodes) {
-            //DEBUG Why?
-            //semlibWindow.show_pundittabtc();
             self.highlightDnDTargetsReceivingNodes(s, nodes);
-            //remove nodes if more than one has been selected
-            
-            //TODO who should manage this???
-//            if (nodes.length > 1){
-//                nodes.splice(0, nodes.length-1);
-//                nodes = [nodes[nodes.length-1]]
-//                var label = s.getItem(nodes[0].id).data.label;
-//                dojo.query('table.dojoDndAvatar .dojoDndAvatarItem').forEach(dojo.destroy);
-//                var tr = '<tr class="dojoDndAvatarItem" style="opacity: 0.9"><td><div class="dojoDndItem">'+label+'</div></td></tr>';
-//                dojo.query('table.dojoDndAvatar tbody').append(tr);
-//            }
-
         });
         
         // Drop or not drop.. clear the highlights
         dojo.subscribe("/dnd/cancel", null, function() {
             dojo.query('.pundit-tc-dnd-container ul').removeClass('dnd_selected');
         });
+        
         dojo.subscribe("/dnd/drop", function(source, nodes, copy, target){
             dojo.query('.pundit-tc-dnd-container ul').removeClass('dnd_selected');
             self.resetSelections();
@@ -209,7 +172,6 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
                         item = {
                             description: treeItem.data.item.description[0],
                             label: treeItem.data.item.label[0],
-                            //image: treeItem.data.item.image[0],
                             rdftype: treeItem.data.item.rdftype,
                             type: treeItem.data.item.type,
                             value: treeItem.data.item.value[0]
@@ -226,15 +188,15 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
                         return;
                     }
                 };
-                //DEBUG check that suorce is in semlibwindow to prevent that tags
+                // DEBUG check that suorce is in semlibwindow to prevent that tags
                 // in the comment tag panel are added
-                //if ((source === semlibItems.itemsDnD) || (source === recon.itemsDnD)){
+                // if ((source === semlibItems.itemsDnD) || (source === recon.itemsDnD)){
                 for (var i = nodes.length - 1; i >= 0; i--) {
                     var id = dojo.attr(nodes[i], 'id');
                     item = source.map[id];
-                    //In the case of a vocab item that is dragged from a triple composer box to another
-                    //the source doen' correspond with the real item source which is the tree 
-                    //resulting in an error when looking for the item in the map.
+                    // In the case of a vocab item that is dragged from a triple composer box to another
+                    // the source doen' correspond with the real item source which is the tree 
+                    // resulting in an error when looking for the item in the map.
                     if (typeof item !== 'undefined'){
                         uri = item.data.value;
                         //TODO WHY this is not parametric? 
@@ -320,15 +282,6 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
         var self = this;
         
         self.addDnDTriple();
-        
-        // Reset every selection on succesful drop
-        //dojo.subscribe('/dnd/drop', function() {
-        //    self.resetSelections();
-        //    // DEBUG: delayed the application of behaviours a bit, to make
-        //    // sure it's always applied correctly
-        //    setTimeout("dojo.behavior.apply();", 50);
-        //});
-        
     }, // initDnD()
 
     /**
