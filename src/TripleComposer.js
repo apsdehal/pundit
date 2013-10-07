@@ -1081,9 +1081,6 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
         if (annotationPageContext.indexOf('#xpointer(') !== -1)
             annotationPageContext = annotationPageContext.split('#')[0]
         
-		// The annotation page context should not be included among targets	
-		//targets.push(annotationPageContext);
-        
         for (var row in self.tripleDnD) {
             var s = [], p = [], o = [];
         
@@ -1092,14 +1089,12 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
             self.tripleDnD[row]['o'].forInItems(function(item) {o.push(item);});
 
             // Skip the row if there's no sub/pred or obj
-            if ((typeof(s) === 'undefined') || (typeof(p) === 'undefined') || (typeof(o) === 'undefined')) break;
+            if ((typeof(s) === 'undefined') || (typeof(p) === 'undefined') || (typeof(o) === 'undefined')) 
+                break;
 
             // Add the triples to the bucket
-            //for (var i in s) {
             for (var i = s.length; i--;) {
-                //for (var j in p) {
                 for (var j = p.length; j--;) {
-                    //for (var k in o) {
                     for (var k = o.length; k--;) {
 
                         var ob_type,
@@ -1159,8 +1154,15 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
             self.log('Added TripleComposer row '+row+' to save bucket');
         }   
 
-        self.log('Saving current: '+dojo.toJson(b.getTalisJson()));
+        if (b.isEmpty()) {
+            self.log("Cannot save an incomplete annotation");
+            dojo.query('#pundit-tc-container').removeClass('pundit-panel-loading');
+            return;
+        }
         
+        // isEditing is set by the tooltipAnnotationViewer with the id
+        // of the annotation. Delete the original annotation, and hope the new
+        // one gets saved correctly!
         if (self.isEditing) {
             self.saver.deleteAnnotation(self.isEditing, function() {
                 self.log('Deleted annotation '+self.isEditing);
@@ -1170,10 +1172,8 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
             });
         }
         
-        if (!b.isEmpty()) 
-            self.saver.writeAnnotationContent(b, targets, annotationPageContext);
-        else 
-            dojo.query('#pundit-tc-container').removeClass('pundit-panel-loading');
+        self.log('Saving current: '+dojo.toJson(b.getTalisJson()));
+        self.saver.writeAnnotationContent(b, targets, annotationPageContext);
 
     }, // saveTriples()
     
@@ -1216,96 +1216,6 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
 
     }, // saveItems()
     
-    // TODO: marco perche' e' qui sta roba? Non viene mai chiamata ..... 
-    // documentiamola se serve, eliminiamola se non serve.
-    /*
-    // REMOVE? START /////////////////////////////////////////////////////////////
-    // This part of code used localstorage to mantain created but not saved triples
-    // Is it a feature that we want to implement? If not remove all
-    saveToLocalStorage:function(){
-        var tStore = [],
-            iStore = [];
-        for (i in pundit.tripleDnD){
-            var triple = {s:[],p:[],o:[]};
-            pundit.tripleDnD[i]['s'].forInItems(function(elem){
-                    triple['s'].push(elem.data);
-            });
-            pundit.tripleDnD[i]['p'].forInItems(function(elem){
-                    triple['p'].push(elem.data);
-            });
-            pundit.tripleDnD[i]['o'].forInItems(function(elem){
-                    triple['o'].push(elem.data);
-            });
-            //DEBUG Store just complete statements
-            if ((triple['s'].length > 0) && (triple['p'].length > 0) && (triple['o'].length > 0))
-                tStore.push(triple);
-        }
-//            pundit.itemsDnD.forInItems(function(item){
-//            iStore.push(item.data);
-//        })
-        
-        if (tStore.length > 0){
-            store.save('triples', tStore);
-        }
-//        if (iStore.length > 0){
-//            store.save('items', iStore);
-//        }
-        //localStorage['triples'] = dojo.toJson(tStore);
-        //localStorage['items'] = dojo.toJson(iStore);
-    },
-    loadFromLocalStorage:function(){
-        var keys = [],
-            now = new Date();
-        //var items = dojo.fromJson(localStorage['items']),
-        //    triples = dojo.fromJson(localStorage['triples']);
-        if (store.exists('items')){
-            var items = store.read('items').value,
-                itemsDate = store.read('items').created;
-            if (itemsDate < now.setDate(now.getDate - 7)){
-                var ans = confirm('Stored Items are older than one week. Do you want to resume it?');
-                if (ans){
-                    pundit.addStoredItems(items);
-                }
-            }else pundit.addStoredItems(items); 
-        }
-        if (store.exists('triples')){
-            var triples = store.read('triples').value,
-                triplesDate = store.read('triples').created;
-            if (triplesDate < now.setDate(now.getDate - 7)){
-                var ans = confirm('Stored Items are older than one week. Do you want to resume it?');
-                if (ans){
-                    pundit.addStoredTriples(triples);
-                }
-            }else pundit.addStoredTriples(triples); 
-        }
-    },
-    addStoredItems:function(items){
-        for (i in items){
-            if (!pundit.itemExists(items[i]))
-                pundit.addItem(items[i]);
-        }
-    },
-    addStoredTriples:function(triples){
-        if (typeof(triples) !== 'undefined'){
-            var l = triples.length,
-            keys =[];
-            for (var i in pundit.tripleDnD){
-                keys.push(i);
-            }
-            for (var j in triples){
-                if (!pundit.tripleExists(triples[j])){
-                    var tripleId = pundit.addDnDTriple(true);
-                    pundit.tripleDnD[tripleId]['s'].insertNodes(false, triples[j]['s']);
-                    pundit.tripleDnD[tripleId]['p'].insertNodes(false, triples[j]['p']);
-                    pundit.tripleDnD[tripleId]['o'].insertNodes(false, triples[j]['o']);
-                    dojo.behavior.apply();
-                }
-                
-            }
-        }
-    },
-    /////////////////////////REMOVE END? //////////////////////////////////////
-    */
     itemExists:function(myitem){
         var exist = false;
         self.itemsDnD.forInItems(function(item){
@@ -1316,7 +1226,8 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
         });
         return exist;
     },
-    tripleExists:function(mytriple){
+    
+    tripleExists: function(mytriple){
         var exist = false,
             keys = [];
         for (var i in self.tripleDnD){
@@ -1335,8 +1246,9 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
         }
         return exist;
     },
-    //Some Helper to deal with the DnD objects
-    itemInDnDContainer:function(container, item){
+    
+    // Some Helper to deal with the DnD objects
+    itemInDnDContainer: function(container, item){
         var exist = false,
             myItem = item;
         container.forInItems(function(cItem){
