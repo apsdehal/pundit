@@ -226,8 +226,11 @@ dojo.declare("pundit.selectors.SelectorBase", pundit.BaseComponent, {
     },
 
     // Shows the suggestions in the panel, for the given term
-    showSuggestionsForTerm: function(term) { 
+    showSuggestionsForTerm: function(term) {
         var self = this;
+        
+        _PUNDIT.ga.track('search', 'selector-'+self.name, 'term='+term);
+        
         self.setLoading(true);
         self.getItemsForTerm(term, 
             function(items) {

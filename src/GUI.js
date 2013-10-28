@@ -175,14 +175,16 @@ dojo.declare("pundit.GUI", pundit.BaseComponent, {
 
         
         // Window toggle
-        dojo.connect(dojo.byId('pundit-gui-expander'), 'onclick', function() { 
-            self.toggleWindow(); 
+        dojo.connect(dojo.byId('pundit-gui-expander'), 'onclick', function() {
+            _PUNDIT.ga.track('gui-button', 'click', '#pundit-gui-expander');
+            self.toggleWindow();
         });
 
         // Annotation Window
-        dojo.connect(dojo.byId('pundit-aw-expander'), 'onclick', function() { self.toggleAnnotationWindow(); });
-        
-        
+        dojo.connect(dojo.byId('pundit-aw-expander'), 'onclick', function() {
+            _PUNDIT.ga.track('gui-button', 'click', '#pundit-aw-expander');
+            self.toggleAnnotationWindow(); 
+        });
 
         // Center panel tabs
         var centerTabs = {
@@ -215,8 +217,10 @@ dojo.declare("pundit.GUI", pundit.BaseComponent, {
                     dojo.query('#pundit-gui-center .pundit-tab, #pundit-gui-footer-center .pundit-gui-button').removeClass('pundit-selected');
                     dojo.query(but).addClass('pundit-selected');
                     dojo.query(tab.container).addClass('pundit-selected');
-                    
-                    //TODO Find a better way for this
+
+                    _PUNDIT.ga.track('gui-button', 'click', tab);
+
+                    // TODO Find a better way for this
                     if (but === '#pundit-tab-my-items'){
                         dojo.removeClass('pundit-new-myitems','pundit-visible');
                         semlibMyItems.emptyNewMyItems();
@@ -226,7 +230,7 @@ dojo.declare("pundit.GUI", pundit.BaseComponent, {
             
             self['show_'+tab.substr(1).replace(/-/g, '')] = f;
             dojo.connect(dojo.query(tab)[0], 'onclick', f);
-        }            
+        }
 
 
         // Right panel tabs

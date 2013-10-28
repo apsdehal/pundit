@@ -102,6 +102,7 @@ dojo.declare("pundit.Help", pundit.BaseComponent, {
                 self.log('Trying to modify users preferences while user is not logged in, ignoring.');
                 return false;
             }
+            _PUNDIT.ga.track('gui-button', 'click', 'pundit-intro-dont-open-again');
             self.log('Setting remote show-introduction to '+!this.checked);
             _PUNDIT.remoteStore.set('show-introduction', !this.checked);
         });
@@ -113,6 +114,7 @@ dojo.declare("pundit.Help", pundit.BaseComponent, {
             label: 'Show introduction',
             showIf: function() { return true; },
             onclick: function() {
+                _PUNDIT.ga.track('cmenu', 'click', 'show-introduction');
                 self.showIntroduction();
                 return true;
             }

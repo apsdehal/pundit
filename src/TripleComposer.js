@@ -136,12 +136,14 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
         
         // Saves the current annotation
         dojo.connect(dojo.byId('pundit-tc-save-button'), 'onclick', function() {
+            _PUNDIT.ga.track('gui-button', 'click', '#pundit-tc-save-button');
             dojo.query('#pundit-tc-container').addClass('pundit-panel-loading');
             self.saveTriples();
         });
 
         // Adds a new triple row
         dojo.connect(dojo.byId('pundit-tc-add-triple-button'), 'onclick', function() {
+            _PUNDIT.ga.track('gui-button', 'click', '#pundit-tc-add-triple.button');
             self.subjSuggestionPanel.hide();
             self.objSuggestionPanel.hide();
             self.propSuggestionPanel.hide();
@@ -167,6 +169,8 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
                 treeItem,
                 uri;
                 if (typeof(source.semlibTree) !== 'undefined') {
+                    _PUNDIT.ga.track('items', 'drop', 'triple-composer-drop-from-tree');
+                    
                     for (var i = nodes.length - 1; i >= 0; i--) {
                         treeItem = source.getItem(nodes[i].id);
                         item = {
@@ -188,6 +192,10 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
                         return;
                     }
                 };
+                
+                _PUNDIT.ga.track('items', 'drop', 'triple-composer-drop');
+                
+                
                 // DEBUG check that suorce is in semlibwindow to prevent that tags
                 // in the comment tag panel are added
                 // if ((source === semlibItems.itemsDnD) || (source === recon.itemsDnD)){
@@ -251,6 +259,8 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
                 return true;
             },
             onclick: function(id) {
+                _PUNDIT.ga.track('cmenu', 'click', 'triple-composer-remove-item');
+                
                 // TODO: dont use an ID but the URI, so other
                 // components can use this call to show their context menu
                 // items (eg: favorites, zoom, web page... )
@@ -405,6 +415,9 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
         // Remove triple button: destroy the dnd targets, destroy the 
         // pundit row container and finally the tripleDnD element
         dojo.connect(dojo.byId('punditRemoveTriple'+u), 'onclick', function(e) {
+
+            _PUNDIT.ga.track('gui-button', 'click', 'triple-composer-remove-triple');
+            
             self.subjSuggestionPanel.hide();
             self.objSuggestionPanel.hide();
             self.propSuggestionPanel.hide();
@@ -415,12 +428,15 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
                 
         // DnD targets clicks highlights only suitable pundit items for the given box
         dojo.connect(dojo.byId("pundit-tc-s-"+u), 'onclick', function(e) {
+            _PUNDIT.ga.track('gui-button', 'click', 'triple-composer-subject');
             self.dndTargetsClickHandler(e, this, 's');
         });
         dojo.connect(dojo.byId("pundit-tc-p-"+u), 'onclick', function(e) {            
+            _PUNDIT.ga.track('gui-button', 'click', 'triple-composer-predicate');
             self.dndTargetsClickHandler(e, this, 'p');
         });
         dojo.connect(dojo.byId("pundit-tc-o-"+u), 'onclick', function(e) {
+            _PUNDIT.ga.track('gui-button', 'click', 'triple-composer-object');
             self.dndTargetsClickHandler(e, this, 'o');
         });
         return u;

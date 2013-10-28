@@ -74,6 +74,7 @@ dojo.declare("pundit.PageItems", pundit.Items, {
                 return !semlibMyItems.uriInItems(item.value);;
             },
             onclick: function(item) {
+                _PUNDIT.ga.track('cmenu', 'click', 'page-item-add-to-myitems');
                 semlibMyItems.addItem(item, true);
                 return true;
             }
@@ -88,6 +89,7 @@ dojo.declare("pundit.PageItems", pundit.Items, {
                 return semlibMyItems.uriInItems(item.value);
             },
             onclick: function(item) {
+                _PUNDIT.ga.track('cmenu', 'click', 'page-item-remove-from-myitems');
                 semlibMyItems.removeItemFromUri(item.value);
                 return true;
             }
@@ -103,6 +105,7 @@ dojo.declare("pundit.PageItems", pundit.Items, {
                     return false;
             },
             onclick: function(item) {
+                _PUNDIT.ga.track('cmenu', 'click', 'page-item-open-web-page');
                 window.open(item.value, 'SemLibOpenedWebPage');
                 return true;
             }

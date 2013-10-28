@@ -156,6 +156,7 @@ dojo.declare("pundit.MyPundit", pundit.BaseComponent, {
 
         dojo.connect(dojo.byId('pundit-mypundit-login-button'), 'onclick', function(e){
             if (!self.logged) {
+                _PUNDIT.ga.track('gui-button', 'click', '#pundit-mypundit-login-button');
                 requester.showLoginForm(self.opts.loginServer);
                 requester.openLoginPopUp();
             }
@@ -177,6 +178,7 @@ dojo.declare("pundit.MyPundit", pundit.BaseComponent, {
                 requester.logout(function(msg) {
                     self.setLogged(false, msg);
                 });
+                _PUNDIT.ga.track('cmenu', 'click', 'sign-out');
                 dojo.removeClass(dojo.byId('pundit-gui-topbar'), 'pundit-loggedin');
                 return true;
             }
@@ -199,6 +201,7 @@ dojo.declare("pundit.MyPundit", pundit.BaseComponent, {
                     return true;
                 },
                 onclick: function() {
+                    _PUNDIT.ga.track('cmenu', 'click', 'notebook-manager');
                     self.notebookManager.show(150,150,{
                         title: "Notebook Manager"
                     });
@@ -218,6 +221,7 @@ dojo.declare("pundit.MyPundit", pundit.BaseComponent, {
                     return myPundit.annotationVisibility != 'all';
                 },
                 onclick: function() {
+                    _PUNDIT.ga.track('cmenu', 'click', 'view-all-notebooks');
                     semlibWindow.closeAllPanels();
                     self.setAnnotationVisibility('all');
                     return true;
@@ -232,6 +236,7 @@ dojo.declare("pundit.MyPundit", pundit.BaseComponent, {
                     return self.annotationVisibility != 'active';
                 },
                 onclick: function() {
+                    _PUNDIT.ga.track('cmenu', 'click', 'view-active-notebooks-only');
                     semlibWindow.closeAllPanels();
                     self.setAnnotationVisibility('active');
                     return true;
@@ -251,6 +256,7 @@ dojo.declare("pundit.MyPundit", pundit.BaseComponent, {
                 return !_PUNDIT.tooltipViewer.isRefreshingAnnotations;
             },
             onclick: function() {
+                _PUNDIT.ga.track('cmenu', 'click', 'show-all-annotations');
                 _PUNDIT.tooltipViewer.showAllAnnotations();
                 return true;
             }
@@ -265,6 +271,7 @@ dojo.declare("pundit.MyPundit", pundit.BaseComponent, {
                 return !_PUNDIT.tooltipViewer.isRefreshingAnnotations;
             },
             onclick: function() {
+                _PUNDIT.ga.track('cmenu', 'click', 'refresh-annotations-and-my-items');
                 _PUNDIT.tooltipViewer.refreshAnnotations();
                 semlibMyItems.loadMyItems();
                 return true;
@@ -281,6 +288,7 @@ dojo.declare("pundit.MyPundit", pundit.BaseComponent, {
                 return semlibWindow.isSomePanelOpen();
             },
             onclick: function() {
+                _PUNDIT.ga.track('cmenu', 'click', 'close-all-annotations');
                 semlibWindow.closeAllPanels();
                 return true;
             }

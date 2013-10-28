@@ -69,6 +69,7 @@ dojo.declare("pundit.FastTextHandler", pundit.BasePanel, {
                 return self._state === 0;
             },
             onclick: function(item) {
+                _PUNDIT.ga.track('cmenu', 'click', 'connect-this-text-to');
                 self.step(item);
                 return true;
             }
@@ -82,6 +83,7 @@ dojo.declare("pundit.FastTextHandler", pundit.BasePanel, {
                 return self._state === 1;
             },
             onclick: function(item) {
+                _PUNDIT.ga.track('cmenu', 'click', 'connect-to-previously-selected-text');
                 self.step(item);
                 return true;
             }
@@ -149,12 +151,15 @@ dojo.declare("pundit.FastTextHandler", pundit.BasePanel, {
         });
         
         dojo.connect(dojo.byId('pundit-fth-cancel-button'), "click", function() {
+            _PUNDIT.ga.track('gui-button', 'click', 'pundit-fth-cancel-button');
             self.log('Cancel pressed: canceling panel');
             self.reset();
             return false;
         });
 
         dojo.connect(dojo.byId('pundit-fth-save-button'), "click", function() {
+
+            _PUNDIT.ga.track('gui-button', 'click', 'pundit-fth-save-button');
 
             tripleComposer.addItemToSubject(self._first);
             tripleComposer.addItemToObject(self._second);

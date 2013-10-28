@@ -94,6 +94,7 @@ dojo.declare("pundit.ImageFragmentHandler", pundit.BaseComponent, {
                     //tooltip_viewer.refreshAnnotations();
                 }
                 tooltip_viewer.highlightByXpointer(item.value);
+                _PUNDIT.ga.track('cmenu', 'click', 'add-image-to-my-items');
                 return true;
             }
         });
@@ -116,6 +117,7 @@ dojo.declare("pundit.ImageFragmentHandler", pundit.BaseComponent, {
                 //tooltip_viewer.refreshAnnotations();
                 // DEBUG: not sure we can avoid the refreshAnnotations() process
                 tooltip_viewer.consolidate();
+                _PUNDIT.ga.track('cmenu', 'click', 'remove-image-from-myitems');
                 return true;
             }
         });
@@ -135,6 +137,7 @@ dojo.declare("pundit.ImageFragmentHandler", pundit.BaseComponent, {
                 if (!_PUNDIT.GUI.isWindowOpen())
                     _PUNDIT.GUI.toggleWindow();
 
+                _PUNDIT.ga.track('cmenu', 'click', 'annotate-this-image');
                 return true;
             }
         });
@@ -151,6 +154,7 @@ dojo.declare("pundit.ImageFragmentHandler", pundit.BaseComponent, {
 				//TODO: remove this and refactor
 				// This is temporally set to false when the panel is used as an Entity Extraction tool :)
 				_PUNDIT['commentTag'].saveComment = true;
+                _PUNDIT.ga.track('cmenu', 'click', 'comment-or-tag-this-image');
             }
         });
     },

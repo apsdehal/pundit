@@ -50,6 +50,8 @@ dojo.declare("pundit.AnnotationReader", pundit.BaseComponent, {
             }
         },
         deferred = requester.xGet(args);
+        _PUNDIT.ga.track('api', 'get', 'annotationServerApiCurrentNotebook');
+        
     },
     
     getOwnedNotebooks:function(cb){
@@ -68,6 +70,8 @@ dojo.declare("pundit.AnnotationReader", pundit.BaseComponent, {
             }
         },
         deferred = requester.xGet(args);
+        _PUNDIT.ga.track('api', 'get', 'annotationServerApiOwnedNotebooks');
+        
     },
     
     getActiveNotebooks:function(cb){
@@ -86,6 +90,8 @@ dojo.declare("pundit.AnnotationReader", pundit.BaseComponent, {
             }
         },
         deferred = requester.xGet(args);
+        _PUNDIT.ga.track('api', 'get', 'annotationServerNotebooksActive');
+        
     },
     
     getNotebookMetadata:function(notebookId, cb){
@@ -104,6 +110,8 @@ dojo.declare("pundit.AnnotationReader", pundit.BaseComponent, {
             }
         },
         deferred = requester.xGet(args);
+        _PUNDIT.ga.track('api', 'get', 'annotationServerApiNotebooks/$ID/metadata');
+        
     },
     
     getUserMetadata:function(id, cb){
@@ -122,6 +130,8 @@ dojo.declare("pundit.AnnotationReader", pundit.BaseComponent, {
             }
         },
         deferred = requester.xGet(args);
+        _PUNDIT.ga.track('api', 'get', 'annotationServerApiUsers/$ID');
+        
     },
 
     getNotebookGraph: function(notebookId) {
@@ -138,6 +148,8 @@ dojo.declare("pundit.AnnotationReader", pundit.BaseComponent, {
             }
         },
         deferred = requester.xGet(args);
+        _PUNDIT.ga.track('api', 'get', 'annotationServerApiNotebooks/$ID/graph');
+        
     },
     
     getCurrentNotebookGraph: function() {
@@ -170,13 +182,10 @@ dojo.declare("pundit.AnnotationReader", pundit.BaseComponent, {
                     return false;
                 }
             },
-            deferred = requester.xGet(args);    
+            deferred = requester.xGet(args);
+            _PUNDIT.ga.track('api', 'get', 'annotationServerMetadataSearch?scope='+mode+'&query=');
         });
-        
-
-
     },
-
 
     getAnnotationContentFromId: function(id){
         var self = this,
@@ -196,6 +205,8 @@ dojo.declare("pundit.AnnotationReader", pundit.BaseComponent, {
                 }
             },
             deferred = requester.xGet(args);
+            _PUNDIT.ga.track('api', 'get', 'annotationServerApiAnnotations/$ID/graph');
+            
     },
     getAnnotationItemsFromId: function(id, xp){
         var self = this,
@@ -217,6 +228,7 @@ dojo.declare("pundit.AnnotationReader", pundit.BaseComponent, {
                 }
             },
             deferred = requester.xGet(args);
+            _PUNDIT.ga.track('api', 'get', 'annotationServerApiAnnotations/$ID/items');
     },
 
     getVocabularyFromJsonp: function(vocabUri, f) {
@@ -237,6 +249,7 @@ dojo.declare("pundit.AnnotationReader", pundit.BaseComponent, {
                 self.fireOnJsonpVocabLoaded(vocabUri); 
             }
         });
+        _PUNDIT.ga.track('api', 'get', 'getVocabularyFromJsonp');
         
     }, // getVocabularyFromJsonp
 
@@ -268,6 +281,8 @@ dojo.declare("pundit.AnnotationReader", pundit.BaseComponent, {
                 }
             };
         var deferred = requester.xGet(args);
+        _PUNDIT.ga.track('api', 'get', 'annotationServerStorage/$KEY');
+        
     },
 
     checkNotebook: function(id, cb) {
@@ -291,6 +306,7 @@ dojo.declare("pundit.AnnotationReader", pundit.BaseComponent, {
                 return false;
             }
         },
-        deferred = requester.xGet(args);	
+        deferred = requester.xGet(args);
+        _PUNDIT.ga.track('api', 'get', 'annotationServerNotebooksActive/$ID');
     }
 });

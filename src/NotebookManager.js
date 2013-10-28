@@ -103,6 +103,7 @@ dojo.declare("pundit.NotebookManager", pundit.BasePanel, {
                         });
                         
 	                });
+                    _PUNDIT.ga.track('cmenu', 'click', 'deactivate-notebook');
 	                return true;
 	            }
 	        });
@@ -128,6 +129,7 @@ dojo.declare("pundit.NotebookManager", pundit.BasePanel, {
                         });
                         
 	                });
+                    _PUNDIT.ga.track('cmenu', 'click', 'activate-notebook');
 	                return true;
 	            }
 	        });
@@ -154,6 +156,7 @@ dojo.declare("pundit.NotebookManager", pundit.BasePanel, {
                         });
 	                    
 	                });
+                    _PUNDIT.ga.track('cmenu', 'click', 'deactivate-other-notebook');
 	                return true;
 	            }
 	        });
@@ -179,6 +182,7 @@ dojo.declare("pundit.NotebookManager", pundit.BasePanel, {
                         });
 	                    
 	                });
+                    _PUNDIT.ga.track('cmenu', 'click', 'activate-other-notebook');
 	                return true;
 	            }
 	        });
@@ -201,6 +205,7 @@ dojo.declare("pundit.NotebookManager", pundit.BasePanel, {
                 self.writer.setNotebookVisibility(id, 'public', function(id,state){
                         self.updateNotebookVisibility(id,state)
                     });
+                _PUNDIT.ga.track('cmenu', 'click', 'set-notebook-public');
                 return true;
            }
         });
@@ -221,6 +226,7 @@ dojo.declare("pundit.NotebookManager", pundit.BasePanel, {
                 self.writer.setNotebookVisibility(id, 'private', function(id,state){
                         self.updateNotebookVisibility(id,state)
                     });
+                _PUNDIT.ga.track('cmenu', 'click', 'set-notebook-private');
                 return true;
             }
         });
@@ -238,6 +244,7 @@ dojo.declare("pundit.NotebookManager", pundit.BasePanel, {
             onclick: function(id) {
                 self.setPanelLoading(true, 'owned');
                 self.writer.setNotebookCurrent(id, self.updateCurrentNotebook(id));
+                _PUNDIT.ga.track('cmenu', 'click', 'set-notebook-current');
                 return true;
             }
         });
@@ -250,6 +257,7 @@ dojo.declare("pundit.NotebookManager", pundit.BasePanel, {
                 return true;
             },
             onclick: function(id) {
+                _PUNDIT.ga.track('cmenu', 'click', 'view-in-ask-the-pundit');
                 window.open(self.opts.askBaseURL + id);
                 return true;
             }
@@ -268,6 +276,7 @@ dojo.declare("pundit.NotebookManager", pundit.BasePanel, {
 						return false;
 				},
           	  onclick: function(id) {
+                  _PUNDIT.ga.track('cmenu', 'click', 'share-notebook');
                	 self.notebookSharePanel.emptyContent();
                 	var html =  '<div class="pundit-panel"><span class="pundit-pane-title">This url is all you need to share your notebook:</span><br>';
                 	html += '<textarea style="width:390px;height:40px;margin-bottom:5px;margin-top:5px">http://metasound.dibet.univpm.it/release_bot/build-development/pages/activate.html?id=' + id + '</textarea><br></div>';
@@ -282,12 +291,13 @@ dojo.declare("pundit.NotebookManager", pundit.BasePanel, {
     },
     initBehaviors:function(){
         var self = this,
-        beh = {};
+            beh = {};
         dojo.connect(dojo.byId('pundit-create-notebook-button'), 'onclick', function(e){
             self.setPanelLoading(true,'owned');
             self.writer.createNotebook(dojo.byId('pundit-notebook-name-input').value, function(id){
                 self.getNotebookInfo(id,'owned');
-            });  
+            });
+            _PUNDIT.ga.track('gui-button', 'click', 'pundit-create-notebook-button');
         }); 
         dojo.connect(dojo.byId('pundit-notebook-name-input'), 'onkeyup', function(e){
             if (e.target.value !== ''){

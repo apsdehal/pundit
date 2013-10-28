@@ -105,9 +105,12 @@ dojo.declare("pundit.selectors.VocabSelector", pundit.BaseComponent, {
         if (v.result.vocab_type !== "predicates") {
             self.initBehaviorsForVocab(v.result.name);
             dojo.behavior.apply();
-            if (self.opts.sortVocabolaries)
+            if (self.opts.sortVocabolaries) {
                 self.sortVocabTree(v.result.name);
+            }
         }
+        
+        self.log("Init Vocab from jsonp done.");
         
     }, // initJsonpVocab()
     
@@ -314,7 +317,7 @@ dojo.declare("pundit.selectors.VocabSelector", pundit.BaseComponent, {
             self.vocabs[voc.name] = {};
 
         self.vocabs[voc.name].label = voc.tab_name;
-        //Add tab
+        // Add tab
         dojo.query('#pundit-vocabs-container ul.pundit-item-filter-list').append('<li id="'+voc.name+'VocabFilter">'+voc.tab_name+'</li>');
         dojo.connect(dojo.byId(voc.name+'VocabFilter'),'onclick',function(){
             self.showVocabByName(voc.name);
@@ -336,8 +339,10 @@ dojo.declare("pundit.selectors.VocabSelector", pundit.BaseComponent, {
             pasteItem: function(){},
             childrenAttrs: ["children"]
         });
+        
+        
 
-        //Define the tree
+        // Define the tree
         self.vocabs[voc.name].tree = dijit.Tree({
             // Add the clicked entity to the item list
             onClick: function(x,y){
@@ -419,7 +424,7 @@ dojo.declare("pundit.selectors.VocabSelector", pundit.BaseComponent, {
                 });
             }
         }
-
+        
         // reset the itemNodes Map
         self.vocabs[name].tree._itemNodesMap = {};
 
@@ -432,10 +437,11 @@ dojo.declare("pundit.selectors.VocabSelector", pundit.BaseComponent, {
         self.vocabs[name].tree.model.root.children = null;
 
         // reset the state of the rootNode
-        self.vocabs[name].tree.rootNode.state = "UNCHECKED";
+        // self.vocabs[name].tree.rootNode.state = "UNCHECKED";
 
         // reload the tree
         self.vocabs[name].tree._load();
+        
     },
     
     initTreeItemsPreview:function(store){
@@ -686,7 +692,7 @@ dojo.declare("pundit.selectors.VocabSelector", pundit.BaseComponent, {
         return items;
     },
     
-    getItemsForTermInVocab:function(term, vocabName,rdftypes){
+    getItemsForTermInVocab: function(term, vocabName,rdftypes){
         var self = this,
             items = [],
             vItems = self.vocabs[vocabName].store._arrayOfAllItems;

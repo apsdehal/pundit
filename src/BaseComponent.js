@@ -73,17 +73,17 @@ dojo.declare("pundit.BaseComponent", null, {
         // defined, get that configuration and initialize the component
         if (typeof(_PUNDIT) !== 'undefined' && typeof(_PUNDIT.config) !== 'undefined'
                 && typeof(_PUNDIT.config.modules[self.declaredClass]) !== 'undefined') {
+                    
             var configOpts = _PUNDIT.config.modules[self.declaredClass];
-            for (i in configOpts) 
+            for (i in configOpts)
                 self.opts[i] = configOpts[i];
         }
 
         // Finally overwrite any given field coming from options parameter
-        for (i in options) 
+        for (i in options)
             self.opts[i] = options[i];
-        
-        self.log('BaseConstructor built opts for '+self.declaredClass);
 
+        self.log('BaseConstructor built opts for '+self.declaredClass);
     }, // constructor
 
     /**

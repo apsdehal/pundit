@@ -69,6 +69,8 @@ dojo.declare("pundit.Recognizer", pundit.BaseComponent, {
                     return true;
                 },
                 onclick: function(item) {
+
+                    _PUNDIT.ga.track('cmenu', 'click', 'recognize-selection');
                
                     // TODO: init the gui here with the selection text
                

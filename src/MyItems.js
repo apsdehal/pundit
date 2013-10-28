@@ -181,6 +181,7 @@ dojo.declare("pundit.MyItems", pundit.Items, {
                 self.removeItemFromUri(item.value);
                 tooltip_viewer.removeTempXpointer(item.value);
                 tooltip_viewer.consolidate();
+                _PUNDIT.ga.track('cmenu', 'click', 'myitems-remove-from-myitems');
                 return true;
             }
         });
@@ -207,6 +208,7 @@ dojo.declare("pundit.MyItems", pundit.Items, {
                     uri = item.pageContext + '#' + fragment;
                 window.open(uri, 'SemLibOpenedWebPage');
                 self.log('Opened a new window to URL '+uri);
+                _PUNDIT.ga.track('cmenu', 'click', 'myitems-show-in-origin-page');
                 return true;
             }
         });
@@ -223,6 +225,7 @@ dojo.declare("pundit.MyItems", pundit.Items, {
             },
             onclick: function(item) {
                 window.open(item.value, 'SemLibOpenedWebPage');
+                _PUNDIT.ga.track('cmenu', 'click', 'myitems-open-web-page');
                 return true;
             }
         });
@@ -237,6 +240,7 @@ dojo.declare("pundit.MyItems", pundit.Items, {
                 self.removeAllItems();
                 tooltip_viewer.resetTempXpointers();
                 tooltip_viewer.refreshAnnotations();
+                _PUNDIT.ga.track('cmenu', 'click', 'myitems-empty-myitems');
                 return true;
             }
         });

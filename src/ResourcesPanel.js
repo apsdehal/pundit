@@ -102,17 +102,19 @@ dojo.declare("pundit.ResourcesPanel", pundit.BasePanel, {
                 }
             };
             
+        /*
         self.namedEntitiesSources = options.namedEntitiesSources || {
 //            Freebase:{label: 'Freebase'},
 //            DBPedia:{label:'DBpedia'},
 //            Wordnet:{label:'Wordnet'}
         };
+        */
         
         //DEBUG Find a better way to do this...
         //Do I need an object or is enought an array????
         self.panels = {};
-        for (var attrname in self.suggestionPanels) {self.panels[attrname] = self.suggestionPanels[attrname];}
-        for (var attrname in self.namedEntitiesSources) {self.panels[attrname] = self.namedEntitiesSources[attrname];}
+        for (var attrname in self.suggestionPanels) { self.panels[attrname] = self.suggestionPanels[attrname]; }
+        for (var attrname in self.namedEntitiesSources) { self.panels[attrname] = self.namedEntitiesSources[attrname]; }
 
         //TODO Pass directly the function to be used in the search?
         self.searchType = options.searchType || 'filter';
@@ -235,22 +237,23 @@ dojo.declare("pundit.ResourcesPanel", pundit.BasePanel, {
 	
     performSearch: function(keyword) {
         var self = this;
-        //TODO Consider to include minimum length for the word?
+        // TODO Consider to include minimum length for the word?
+        _PUNDIT.ga.track('search', 'resources-panel-search', 'term='+keyword);
+
         if (keyword !== self._lastKeyword){
-            //TODO should I pass the search function as parameter?
+            // TODO should I pass the search function as parameter?
             self._lastKeyword = keyword;
             if (self.searchType === 'filter'){
                 self.filterItemsByTerm(keyword);
-            //Always search in freebase and dbpedia?
+            // Always search in freebase and dbpedia?
             } else if (self.searchType === 'search'){
                 self.searchItemsByTerm(keyword);
-            //Always search in freebase and dbpedia    
+                // Always search in freebase and dbpedia
             }
-			        
+
             self.searchNamedEntities(keyword);
-					
+
         }
-		
     },
 	
     //Init the behaviors of the component
@@ -269,14 +272,18 @@ dojo.declare("pundit.ResourcesPanel", pundit.BasePanel, {
             //self.setLoading(false);
             clearTimeout(self.keyInputTimer);
             var keyword = dojo.query('#' + self._id + ' .pundit-rp-search-input')[0].value;
-            self.keyInputTimer = setTimeout(function(){self.performSearch(keyword)}, self.keyInputTimerLength);
+            self.keyInputTimer = setTimeout(function(){
+                self.performSearch(keyword)
+            }, self.keyInputTimerLength);
         });
         
         dojo.connect(dojo.query('#' + self._id + ' .pundit-rp-add-literal')[0], 'onclick', function(e) {
+            _PUNDIT.ga.track('gui-button', 'click', 'resources-panel-add-literal');
             self.showLiteralPanel(true, false);
         });
 
         dojo.connect(dojo.query('#' + self._id + ' .pundit-rp-add-date')[0], 'onclick', function(e) {
+            _PUNDIT.ga.track('gui-button', 'click', 'resources-panel-add-date');
             self.showDatePanel(true, false);
         });
 
@@ -293,18 +300,22 @@ dojo.declare("pundit.ResourcesPanel", pundit.BasePanel, {
         });
         
         dojo.connect(dojo.query('#' + self._id + ' .pundit-rp-panel-close')[0], 'onclick', function() {
+            _PUNDIT.ga.track('gui-button', 'click', 'resources-panel-close-literal-panel');
             self.showLiteralPanel(false, false);
         });
         // TODO: [0] [1] ?? connect better .. ? behavior ? on() ? 
         dojo.connect(dojo.query('#' + self._id + ' .pundit-rp-panel-close')[1], 'onclick', function() {
+            _PUNDIT.ga.track('gui-button', 'click', 'resources-panel-close-literal-panel');
             self.showLiteralPanel(false, false);
         });
         
         dojo.connect(dojo.query('#' + self._id + ' .pundit-rp-literal-panel-done')[0], 'onclick', function() {
+            _PUNDIT.ga.track('gui-button', 'click', 'resources-panel-done-literal-panel');
             self.createLiteralItem();
         });
         
         dojo.connect(dojo.query('#' + self._id + ' .pundit-rp-date-panel-done')[0], 'onclick', function() {
+            _PUNDIT.ga.track('gui-button', 'click', 'resources-panel-done-literal-panel');
             self.createDateItem();
         });
         
@@ -356,6 +367,7 @@ dojo.declare("pundit.ResourcesPanel", pundit.BasePanel, {
                 };
                 beh['#'+ self._id + '-suggestions-list-' + _sp + ' li.dojoDndItem span.pundit-item-label'] = {
                     'onclick': function(e) {
+                        _PUNDIT.ga.track('items', 'add', 'resources-panel-add-from-label');
                         var item, node;
                         
                         if (e.target.nodeName === 'LI'){
@@ -372,6 +384,7 @@ dojo.declare("pundit.ResourcesPanel", pundit.BasePanel, {
 				//TODO: merge this code with the previous one...
                 beh['#'+ self._id + '-suggestions-list-' + _sp + ' li.dojoDndItem span.pundit-item-add-button'] = {
                     'onclick': function(e) {
+                        _PUNDIT.ga.track('items', 'add', 'resources-panel-add-from-button');
                         var item, node;
                         
                         if (e.target.nodeName === 'LI'){
@@ -439,6 +452,7 @@ dojo.declare("pundit.ResourcesPanel", pundit.BasePanel, {
 
             },
             onclick: function(uri) {
+                _PUNDIT.ga.track('cmenu', 'click', 'resources-panel-open-web-page');
                 window.open(uri, 'SemLibOpenedWebPage');
                 return true;
             }
@@ -463,6 +477,7 @@ dojo.declare("pundit.ResourcesPanel", pundit.BasePanel, {
                 return false;
             },
             onclick: function(xp) {
+                _PUNDIT.ga.track('cmenu', 'click', 'resources-panel-show-in-origin-page');
                 var item = _PUNDIT.items.getItemByUri(xp),
                     fragment = xp.split('#')[1],
                     uri = item.pageContext + '#' + fragment;

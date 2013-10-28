@@ -103,9 +103,11 @@ dojo.declare("pundit.AuthenticatedRequests", pundit.BaseComponent, {
 
         self.dialog.attr("content", h);
         dojo.connect(dojo.byId('pundit-login-open-button'), 'onclick', function() {
+            _PUNDIT.ga.track('gui-button', 'click', '#pundit-login-open-button');
             self.openLoginPopUp();
         });
         dojo.connect(dojo.byId('pundit-login-close-button'), 'onclick', function() { 
+            _PUNDIT.ga.track('gui-button', 'click', '#pundit-login-close-button');
             self.dialog.hide();
             clearTimeout(self.loginTimer);
         });

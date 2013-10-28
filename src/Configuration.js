@@ -362,6 +362,10 @@ dojo.declare("pundit.Configuration", pundit.BaseComponent, {
                 active: true
             },
             
+            'pundit.AnalyticsHelper': {
+                active: true
+            },
+            
             // Used :-)
             // WORNING: cannot deactivate at the moment!
             'pundit.Recognizer': {

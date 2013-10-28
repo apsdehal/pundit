@@ -65,6 +65,7 @@ dojo.declare("pundit.ImageAnnotationPanel", pundit.BasePanel, {
                 return true
             },
             onclick: function(item) {
+                _PUNDIT.ga.track('cmenu', 'click', 'annotate-a-part-of-this-image');
                 self.initialize(item.image);
                 return true;
             }
@@ -287,8 +288,10 @@ dojo.declare("pundit.ImageAnnotationPanel", pundit.BasePanel, {
 //            });
             
             self.updateShapeRendering(scale.x);
-            
             self.stage.draw();
+            
+            _PUNDIT.ga.track('gui-button', 'click', 'pundit-image-annotation-zoom');
+            
         });
         dojo.connect(dojo.byId("pundit-image-annotation-pan"),'onclick', function(){
             var scale = null;
@@ -305,6 +308,8 @@ dojo.declare("pundit.ImageAnnotationPanel", pundit.BasePanel, {
 
             self.updateShapeRendering(scale.x);
             self.stage.draw();
+            _PUNDIT.ga.track('gui-button', 'click', 'pundit-image-annotation-pan');
+            
         });
     
         dojo.connect(dojo.byId("pundit-image-annotation-polygon"),'onclick', function(){
@@ -319,7 +324,7 @@ dojo.declare("pundit.ImageAnnotationPanel", pundit.BasePanel, {
                 self.deselectShape();
             }
             
-            //TODO Add a shape type
+            _PUNDIT.ga.track('gui-button', 'click', 'pundit-image-annotation-polygon');
         });
         
         dojo.connect(dojo.byId("pundit-image-annotation-delete"),'onclick', function(){
@@ -346,6 +351,7 @@ dojo.declare("pundit.ImageAnnotationPanel", pundit.BasePanel, {
                 
                 self.layer.finishedDrawingNewLine = true;
                 self.stage.draw();
+                _PUNDIT.ga.track('gui-button', 'click', 'pundit-image-annotation-delete');
             }
         });
         
@@ -363,8 +369,8 @@ dojo.declare("pundit.ImageAnnotationPanel", pundit.BasePanel, {
                 }
                 self.selectedShape = null;
                 self.hide();
+                _PUNDIT.ga.track('gui-button', 'click', 'pundit-image-annotation-myitem');
             }
-
         });
         
         dojo.connect(dojo.byId("pundit-image-annotation-add-comment"),'onclick', function(){
@@ -376,19 +382,13 @@ dojo.declare("pundit.ImageAnnotationPanel", pundit.BasePanel, {
             
                 self.selectedShape = null;
             
-                //self.hide();
                 _PUNDIT['commentTag'].initPanel(item, "Comment and tags");    
+                _PUNDIT.ga.track('gui-button', 'click', 'pundit-image-annotation-add-comment');
 
             } else {
-
                 //TODO: Alert the user: "DRAW A POLYGON FIRST"
-                
             }
-            
-            
-
         });
-        
     },
 
     //Update the newLine which is draw to help in polygon creation

@@ -58,6 +58,7 @@ dojo.declare("pundit.ContactHelper", pundit.BaseComponent, {
             label: instance.title,
             showIf: function() { return true; },
             onclick: function() {
+                _PUNDIT.ga.track('cmenu', 'click', 'show-contact-form');
                 self._showForm(id);
                 return true;
             }

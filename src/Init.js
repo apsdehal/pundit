@@ -135,7 +135,6 @@ dojo.require("pundit.Configuration");
 dojo.require("pundit.annotators.AnnotatorsConductor");
 dojo.require("pundit.annotators.AnnotatorsBase");
 
-
 /**
  * @class pundit.Init
  * @extends pundit.baseComponent
@@ -199,7 +198,11 @@ dojo.declare("pundit.Init", pundit.BaseComponent, {
         // TODO: sanitize use of this global var, and remove it
         ns = new pundit.NamespaceHelper();
         p['ns'] = ns;
-        
+
+        if (p.config.isModuleActive('pundit.AnalyticsHelper')) {
+            dojo.require("pundit.AnalyticsHelper");
+            p['ga'] = new pundit.AnalyticsHelper();
+        }
 
         // TODO: sanitize use of this global var, and remove it
         previewer = new pundit.Previewer();
@@ -285,19 +288,33 @@ dojo.declare("pundit.Init", pundit.BaseComponent, {
         for (var se in p.config.modules.selectors) {
             var conf = p.config.modules.selectors[se];
 
-            // if (p.configuration._isArray(conf)) {
-                // TODO: to let the system istantiate more than 1 copy of a same selector
-                // If it's an array, iterate over it and instantiate N selectors, not just 1
-            //}
+            _foorequire('pundit.selectors.' + se + 'Selector');
 
-            if (conf.active === true) {
-                self.log('Loading selector ' + se);
-                _foorequire('pundit.selectors.' + se + 'Selector');
-                p[conf.name + 'Selector'] = new pundit.selectors[se + 'Selector'](conf);
-                p.config.activeSelectorsName.push(se);
+            if (p.configuration._isArray(conf)) {
+
+                // Require the file just once, spawn N instances
+                self.log('Loading multiple instances of selector ' + se);
+
+                for (var l = conf.length; l-->0;) {
+                    var subConf = conf[l];
+                    if (subConf.active === true) {
+                        // console.log('Sub conf ', subConf.name, subConf.queryTypes);
+                        p[subConf.name + 'Selector'] = new pundit.selectors[se + 'Selector'](subConf);
+                        p.config.activeSelectorsName.push({selector: se, name: subConf.name, label: subConf.label});
+                        // console.log('@@@@', p[subConf.name + 'Selector'].opts.queryTypes);
+                    }
+                }
+                
+            } else {
+                if (conf.active === true) {
+                    self.log('Loading selector ' + se);
+                    p[conf.name + 'Selector'] = new pundit.selectors[se + 'Selector'](conf);
+                    p.config.activeSelectorsName.push({selector: se, name: conf.name, label: conf.label});
+                }
             }
-        }
 
+        }
+        
         // TODO -> imageFragmentHandler
         if (p.config.isModuleActive("pundit.ImageFragmentHandler")) {
             dojo.require("pundit.ImageFragmentHandler");
@@ -317,11 +334,13 @@ dojo.declare("pundit.Init", pundit.BaseComponent, {
         // extract entities from
         p.config.activeEntitySources = {};
         for (var k = p.config.activeSelectorsName.length; k--;) {
-            var se = p.config.activeSelectorsName[k],
-                conf = p.config.modules.selectors[se];
-            p.config.activeEntitySources[conf.name + "Selector"] = {label: conf.label};
+            var ob = p.config.activeSelectorsName[k],
+                se = ob.selector,
+                name = ob.name,
+                label = ob.label;
+            p.config.activeEntitySources[name + "Selector"] = {label: label};
         }
-
+        
         // Recognizer
         if (p.config.isModuleActive('pundit.Recognizer')) {
             dojo.require("pundit.Recognizer");

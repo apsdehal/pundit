@@ -149,6 +149,7 @@ dojo.declare("pundit.CommentTagPanel", pundit.RecognizerPanel, {
                 return true;
             },
             onclick: function(item) {
+                _PUNDIT.ga.track('cmenu', 'click', 'add-comment-or-tags');
                 self.initPanel(item, "Comment and tags");
                 //TODO: remove this and refactor
                 // This is temporally set to false when the panel is used as an Entity Extraction tool :)
@@ -167,8 +168,9 @@ dojo.declare("pundit.CommentTagPanel", pundit.RecognizerPanel, {
                     return true;
                 },
                 onclick: function(item) {
-                    self.initPanel(item, "Extract entitites");
+                    _PUNDIT.ga.track('cmenu', 'click', 'extract-entities');
 
+                    self.initPanel(item, "Extract entitites");
                     dojo.byId('pundit-ctp-textarea-title').innerHTML = "Selected text:"
                     dojo.html.set('pundit-ctp-comment-input', item.description);
                     
@@ -191,7 +193,6 @@ dojo.declare("pundit.CommentTagPanel", pundit.RecognizerPanel, {
             var comment = dojo.byId('pundit-ctp-comment-input').innerHTML.replace(/<(?:.|\n)*?>/gm, '');
             self.cancelPendingSpotlightRequests();
             dojo.query('#' + self._id + ' .pundit-pane').removeClass('pundit-panel-loading');
-            
             self.updateSaveBtn();
         });
 

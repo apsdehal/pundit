@@ -52,6 +52,7 @@ dojo.declare("pundit.AnnotationWriter", pundit.BaseComponent, {
                 };
                 // Call the asynchronous xhrPost
                 requester.xPost(post);
+                _PUNDIT.ga.track('api', 'post', 'annotationServerApiNotebooksGraph/$ID/?context');
             });
         
     }, // writeAnnotationContent
@@ -111,6 +112,7 @@ dojo.declare("pundit.AnnotationWriter", pundit.BaseComponent, {
             };
 
         requester.xDelete(args);
+        _PUNDIT.ga.track('api', 'delete', 'annotationServerApiAnnotations/$ID');
 
     }, // deleteAnnotation()
     
@@ -135,6 +137,7 @@ dojo.declare("pundit.AnnotationWriter", pundit.BaseComponent, {
                 }
             };
         requester.xPost(args);
+        _PUNDIT.ga.track('api', 'post', 'annotationServerApiAnnotations/$ID/items');
     }, // writeAnnotationItems()
     
     // TODO: this will be replaced by new ACL system, and obsoleted,
@@ -155,6 +158,7 @@ dojo.declare("pundit.AnnotationWriter", pundit.BaseComponent, {
             }
         };
         requester.xPost(args);
+        _PUNDIT.ga.track('api', 'post', 'annotationServerStorage/$KEY');
     },
 
 	setNotebookActive: function(notebook_id,flag,cb) {
@@ -179,11 +183,13 @@ dojo.declare("pundit.AnnotationWriter", pundit.BaseComponent, {
         };
 		if (flag == 1) {
 			requester.xPut(args);
+            _PUNDIT.ga.track('api', 'put', 'annotationServerNotebooksActive/$ID');
 		} else if (flag == 0) {
+            _PUNDIT.ga.track('api', 'delete', 'annotationServerNotebooksActive/$ID');
 			requester.xDelete(args);
 		}
 	},
-    setNotebookCurrent: function(notebookId,cb){
+    setNotebookCurrent: function(notebookId, cb){
         var self = this;
 		var args = {
             url: ns.annotationServerApiNotebooks + "current/" + notebookId,
@@ -199,6 +205,7 @@ dojo.declare("pundit.AnnotationWriter", pundit.BaseComponent, {
             }
         };
 		requester.xPut(args);
+        _PUNDIT.ga.track('api', 'put', 'annotationServerApiNotebooks/current/$ID');
     },
     //State can be public or private
     setNotebookVisibility: function(notebookId,state,cb){
@@ -217,6 +224,7 @@ dojo.declare("pundit.AnnotationWriter", pundit.BaseComponent, {
             }
         };
 		requester.xPut(args);
+        _PUNDIT.ga.track('api', 'put', 'annotationServerApiNotebooks/state/$ID');
     },
     createNotebook:function(notebookName,cb){
         var self = this;
@@ -236,6 +244,7 @@ dojo.declare("pundit.AnnotationWriter", pundit.BaseComponent, {
             }
         };
 		requester.xPost(args);
+        _PUNDIT.ga.track('api', 'post', 'annotationServerApiNotebooks');
     },
     
     uploadImage:function(form, cb){

@@ -237,6 +237,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                 return self.areAllAnnotationsOnItemOpened(item.value);
             },
             onclick: function(item) {
+                _PUNDIT.ga.track('cmenu', 'click', 'close-all-annotation-on-this-item');
                 semlibWindow.closePanelByXpointer(item.value);
                 return true;
             }
@@ -252,6 +253,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                 return self.xpointersClasses[item.value];
             },
             onclick: function(item) {
+                _PUNDIT.ga.track('cmenu', 'click', 'zoom-on-this-item');
                 self.zoomOnXpointer(item.value);
                 return true;
             }
@@ -271,6 +273,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                 //semlibMyItem.removeMyItem();
                 
                 //DEBUG Remove item from my items and from page items
+                _PUNDIT.ga.track('cmenu', 'click', 'remove-from-my-items');
                 semlibMyItems.removeItemFromUri(item.value);
                 self.removeTempXpointer(item.value);
                 
@@ -289,7 +292,8 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                 return !semlibMyItems.uriInItems(item.value);
             },
             onclick: function(item) {
-		        tooltip_viewer.highlightByXpointer(item.value);
+                _PUNDIT.ga.track('cmenu', 'click', 'add-to-my-items');
+                tooltip_viewer.highlightByXpointer(item.value);
                 var item = semlibItems.getItemFromUri(item.value);
                 if (typeof item !== 'undefined'){
                     //tripleComposer.addItemToSubject(item);
@@ -309,6 +313,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                 return semlibMyItems.uriInItems(item.value);
             },
             onclick: function(item) {
+                _PUNDIT.ga.track('cmenu', 'click', 'remove-annotated-from-my-items');
 	            semlibMyItems.removeItemFromUri(item.value);
 	            tooltip_viewer.removeTempXpointer(item.value);
                 // tooltip_viewer.refreshAnnotations();
@@ -326,6 +331,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                 return self.opts.enableHighlightingMode && !self.opts.highlightingMode;
             },
             onclick: function() {
+                _PUNDIT.ga.track('cmenu', 'click', 'turn-highlighting-on');
                 self.opts.highlightingMode = true;
                 tooltip_viewer.consolidate();
                 return true;
@@ -340,6 +346,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                 return self.opts.enableHighlightingMode && self.opts.highlightingMode;
             },
             onclick: function() {
+                _PUNDIT.ga.track('cmenu', 'click', 'turn-highlighting-on');
                 self.opts.highlightingMode = false;
                 tooltip_viewer.consolidate();
                 return true;
@@ -1121,6 +1128,8 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
             dojo.connect(dojo.byId(id), 'onclick', (function(_c, _x) { 
                 return function (e) {
 
+                    _PUNDIT.ga.track('gui-button', 'click', 'rdf-icon');
+
                     // If the annotation window is open, it might be the case where
                     // another fragment own an annotation in which this fragment is involved.
                     // This line recalls the annotation near the clicked fragment
@@ -1421,6 +1430,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
             },
             '#pundit-tc-reset-button': {
                 'click': function() {
+                    _PUNDIT.ga.track('gui-button', 'click', 'pundit-tc-edit-reset');
                     tripleComposer.clearDnDTriples();
                     dojo.query('#pundit-tc-container').removeClass("pundit-edit-mode");
                     _PUNDIT.tripleComposer.isEditing = false;
@@ -1428,6 +1438,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
             },
             'div.pundit-aw-panel-buttons span.edit': {
                 'click': function(e) {
+                    _PUNDIT.ga.track('gui-button', 'click', 'pundit-tc-edit');
                     var annId = dojo.attr(e.currentTarget, 'data-annId'),
                         nbId = dojo.attr(e.currentTarget, 'data-nbId');
                     self.editAnnotation(nbId, annId);
@@ -1447,6 +1458,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
             },
             'div.pundit-aw-panel-buttons span.delete': {
                 'click': function(e) {
+                    _PUNDIT.ga.track('gui-button', 'click', 'pundit-tc-delete');
                     var ann_id = dojo.attr(e.currentTarget, 'about'),
                         deleteJobId = _PUNDIT.loadingBox.addJob('Deleting annotation ');
 

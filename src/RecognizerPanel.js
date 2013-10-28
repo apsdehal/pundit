@@ -138,6 +138,7 @@ dojo.declare("pundit.RecognizerPanel", pundit.ResourcesPanel, {
         var self = this;
         
         dojo.connect(dojo.query('#' + self._id + ' .pundit-rp-save-button')[0], 'onclick', function(e){
+            _PUNDIT.ga.track('gui-button', 'click', self._id+'-pundit-rp-save-button');
             if (!dojo.hasClass(dojo.query('#' + self._id + ' .pundit-rp-save-button')[0], 'pundit-button-disabled')) {
                 self.saveTriples();
             } else
