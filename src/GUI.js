@@ -218,7 +218,7 @@ dojo.declare("pundit.GUI", pundit.BaseComponent, {
                     dojo.query(but).addClass('pundit-selected');
                     dojo.query(tab.container).addClass('pundit-selected');
 
-                    _PUNDIT.ga.track('gui-button', 'click', tab);
+                    _PUNDIT.ga.track('gui-button', 'click', but);
 
                     // TODO Find a better way for this
                     if (but === '#pundit-tab-my-items'){
