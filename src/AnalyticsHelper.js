@@ -28,7 +28,8 @@ dojo.declare("pundit.AnalyticsHelper", pundit.BaseComponent, {
     opts: {
         // Default tracking code for Pundit.
         // One might want to overwrite it.. or not.
-        trackingCode: 'UA-45204976-2'
+        trackingCode: 'UA-45204976-2',
+        doTracking: true
     },
 
     constructor: function(options) {
@@ -57,7 +58,8 @@ dojo.declare("pundit.AnalyticsHelper", pundit.BaseComponent, {
     },
     
     track: function(category, action, label, value) {
-        ga('send', 'event', category, action, label, value);
+        if (this.opts.doTracking)
+            ga('send', 'event', category, action, label, value);
     }
 
 });
