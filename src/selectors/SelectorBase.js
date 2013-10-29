@@ -19,8 +19,24 @@
 *//**
  * @class pundit.selectors.SelectorBase
  * @extends pundit.baseComponent
- * @description Base class for Pundit Selectors. 
- * TODO TODO TODO TODO 
+ * @description Base class for Pundit Selectors. Multiple selectors 
+ * configuration examples:
+ *    'Muruca': [
+ *        {
+ *            queryTypes: ['azioni'],
+ *            name: 'MurucaAzioni',
+ *            label: 'Azioni',
+ *            MurucaReconURL: "http://demo2.galassiaariosto.netseven.it/reconcile",
+ *            active: true
+ *        },
+ *        {
+ *            queryTypes: ['muruca','ecphra'],
+ *            name: 'MurucaEcphrasis',
+ *            label: 'Ecphrasis',
+ *            MurucaReconURL: "http://demo2.galassiaariosto.netseven.it/reconcile",
+ *            active: true
+ *        }
+ *    ] 
  */
 dojo.provide("pundit.selectors.SelectorBase");
 dojo.declare("pundit.selectors.SelectorBase", pundit.BaseComponent, {
