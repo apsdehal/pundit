@@ -45,7 +45,6 @@ dojo.declare("pundit.selectors.MurucaSelector", pundit.selectors.SelectorBase, {
         var self = this;
         self.requests = {};
         self.log('Selector '+self.name+' up and running.');
-        return self;
     }, // constructor()
     
     // (async) Return a list of items for the given term, calling the callback func

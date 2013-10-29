@@ -60,28 +60,25 @@ dojo.declare("pundit.BaseComponent", null, {
         var self = this, 
             i;
 
-        // If the class extending us doesnt have an .opts field, create it
-        if (typeof(self.opts) === 'undefined')
-            self.opts = {};
-
+        // If the class extending us doesnt have an .opts field, create a new object
+        var opts = dojo.clone(self.opts) || {};
+        
         // Copy in the baseComponent defaults, if the given .opts doesnt have it
-        for (i in self.defaultOpts) 
-            if (typeof(self.opts[i]) === 'undefined')
-                self.opts[i] = self.defaultOpts[i];
+        dojo.mixin(opts, self.defaultOpts);
 
         // If _PUNDIT, _PUNDIT.config and _PUNDIT.config.modules.THISMODULENAME are
         // defined, get that configuration and initialize the component
         if (typeof(_PUNDIT) !== 'undefined' && typeof(_PUNDIT.config) !== 'undefined'
                 && typeof(_PUNDIT.config.modules[self.declaredClass]) !== 'undefined') {
-                    
+
             var configOpts = _PUNDIT.config.modules[self.declaredClass];
-            for (i in configOpts)
-                self.opts[i] = configOpts[i];
+            dojo.mixin(opts, configOpts);
         }
 
         // Finally overwrite any given field coming from options parameter
-        for (i in options)
-            self.opts[i] = options[i];
+        dojo.mixin(opts, options);
+        
+        self.opts = dojo.clone(opts);
 
         self.log('BaseConstructor built opts for '+self.declaredClass);
     }, // constructor

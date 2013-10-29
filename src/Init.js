@@ -298,10 +298,8 @@ dojo.declare("pundit.Init", pundit.BaseComponent, {
                 for (var l = conf.length; l-->0;) {
                     var subConf = conf[l];
                     if (subConf.active === true) {
-                        // console.log('Sub conf ', subConf.name, subConf.queryTypes);
                         p[subConf.name + 'Selector'] = new pundit.selectors[se + 'Selector'](subConf);
                         p.config.activeSelectorsName.push({selector: se, name: subConf.name, label: subConf.label});
-                        // console.log('@@@@', p[subConf.name + 'Selector'].opts.queryTypes);
                     }
                 }
                 
