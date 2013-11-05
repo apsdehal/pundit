@@ -70,6 +70,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
         });
 
         self.notebooks = {};
+        self._onLoadAnnotationShown = false;
 
         self.log("TooltipAnnotationViewer Up and running");
 
@@ -144,7 +145,8 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                     }
                     _PUNDIT.tripleComposer.tryToShowAnnotation = null;
                 }
-
+                
+                self.showAnnotationOnLoad();
             }
         });
         
@@ -1125,7 +1127,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
             })(cl, xp));
             
             // Mouse click on the RDF icon
-            dojo.connect(dojo.byId(id), 'onclick', (function(_c, _x) { 
+            dojo.connect(dojo.byId(id), 'onclick', (function(_c, _x) {
                 return function (e) {
 
                     _PUNDIT.ga.track('gui-button', 'click', 'rdf-icon');
@@ -1219,8 +1221,33 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
             }
         }
         
+        
         self.log("Consolidate() is done.")
     }, // consolidate()
+    
+    showAnnotationOnLoad: function() {
+        var self = this,
+            uri = window.location.href,
+            query = uri.substring(uri.indexOf("?") + 1, uri.length);
+        
+        if (self._onLoadAnnotationShown)
+            return;
+        
+        self.queryObject = dojo.queryToObject(query);
+        if ('pundit-show' in self.queryObject) {
+            try {
+                var id = self.queryObject['pundit-show'],
+                    xp = self.annotations[id].targets[0];
+                self.showAnnotationPanel(id);
+                setTimeout(function() { self.zoomOnXpointer(xp); }, 1000);
+            } catch (e) {
+                console.log('Error trying to show an annotation on load.')
+            }
+        }
+
+        self._onLoadAnnotationShown = true;
+        
+    },
 
     highlightByXpointer: function(xp) {
         var self = this;
