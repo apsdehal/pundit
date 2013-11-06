@@ -1226,14 +1226,12 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
     }, // consolidate()
     
     showAnnotationOnLoad: function() {
-        var self = this,
-            uri = _PUNDIT.tripleComposer.getSafePageContext(),
-            query = uri.substring(uri.indexOf("?") + 1, uri.length);
-        
+        var self = this;
+                
         if (self._onLoadAnnotationShown)
             return;
         
-        self.queryObject = dojo.queryToObject(query);
+        self.queryObject = _PUNDIT.tripleComposer.getQueryParametersObject();
         if ('pundit-show' in self.queryObject) {
             try {
                 var id = self.queryObject['pundit-show'],

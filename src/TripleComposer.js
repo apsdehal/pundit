@@ -1068,6 +1068,24 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
     },
 
     /**
+     * Gets a query parameters object, stripping out the fragment
+     * (#...) if present
+     * @method getQueryParametersObject
+     */
+    getQueryParametersObject: function() {
+        var uri = window.location.href,
+            query;
+
+        // If there's a fragment, save it and remove it from the uri
+        if (uri.indexOf("#") !== -1)
+            uri = uri.substring(0, uri.indexOf("#"));
+
+        query = uri.substring(uri.indexOf("?") + 1, uri.length);
+
+        return dojo.queryToObject(query);
+    },
+
+    /**
      * Saves to the pundit server the current composed triples.
      * @method saveTriples
      */
