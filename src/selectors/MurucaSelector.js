@@ -35,7 +35,7 @@ dojo.declare("pundit.selectors.MurucaSelector", pundit.selectors.SelectorBase, {
         keywordMinimumLength: 3,
 
         murucaReconURL: 'http://demo2.galassiaariosto.netseven.it/reconcile',
-        queryTypes: [],
+        queryType: '',
         queryProperties: {},
         
         layouts: ['pundit-view-list', 'pundit-view-tile']
@@ -59,9 +59,11 @@ dojo.declare("pundit.selectors.MurucaSelector", pundit.selectors.SelectorBase, {
             callbackParamName: "jsonp",
             url: self.opts.murucaReconURL,
             content: {
-                query: dojo.toJson({query: term}),
-                type: self.opts.queryTypes,
-                properties: self.opts.queryProperties
+                query: dojo.toJson({
+                    query: term,
+                    type: self.opts.queryType,
+                    properties: self.opts.queryProperties
+                }),
             },
             load: function(r) {
 

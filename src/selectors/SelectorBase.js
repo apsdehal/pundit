@@ -23,14 +23,14 @@
  * configuration examples:
  *    'Muruca': [
  *        {
- *            queryTypes: ['azioni'],
+ *            queryType: 'azioni',
  *            name: 'MurucaAzioni',
  *            label: 'Azioni',
  *            MurucaReconURL: "http://demo2.galassiaariosto.netseven.it/reconcile",
  *            active: true
  *        },
  *        {
- *            queryTypes: ['muruca','ecphra'],
+ *            queryTypes: 'muruca',
  *            name: 'MurucaEcphrasis',
  *            label: 'Ecphrasis',
  *            MurucaReconURL: "http://demo2.galassiaariosto.netseven.it/reconcile",
