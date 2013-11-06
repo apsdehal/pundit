@@ -1034,6 +1034,38 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
         }
     }, // resetSelections()
 
+    /**
+     * Gets a safe page context, stripping out pundit-related
+     * query parameters
+     * @method getSafePageContext
+     */
+    getSafePageContext: function() {
+        var self = this,
+            uri = window.location.href,
+            fragment, query, queryObject, ret;
+            
+        // If there's a fragment, save it and remove it from the uri
+        if (uri.indexOf("#") !== -1) {
+            fragment = uri.substring(uri.indexOf("#") + 1, uri.length);
+            uri = uri.substring(0, uri.indexOf("#"));
+        }
+
+        // If there's a query, decode it and remove it from the uri
+        if (uri.indexOf("?") !== -1) {
+            query = uri.substring(uri.indexOf("?") + 1, uri.length);
+            uri = uri.substring(0, uri.indexOf("?"));
+
+            queryObject = dojo.queryToObject(query);
+            delete queryObject['pundit-show'];
+            query = dojo.objectToQuery(queryObject);
+        }
+
+        // Build back the URI
+        if (query) uri += '?' + query;
+        if (fragment) uri += '#' + fragment;
+        
+        return uri; 
+    },
 
     /**
      * Saves to the pundit server the current composed triples.
@@ -1042,7 +1074,7 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
     saveTriples: function() {
         var self = this,
             targets = [],
-            annotationPageContext = window.location.href,
+            annotationPageContext = self.getSafePageContext(),
             b = new pundit.TriplesBucket();
         
         // DEBUG remove xpointer from page location

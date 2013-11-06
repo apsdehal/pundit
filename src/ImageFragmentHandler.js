@@ -235,7 +235,7 @@ dojo.declare("pundit.ImageFragmentHandler", pundit.BaseComponent, {
             xp = self.helper.getXpFromNode(image),
             content = self.helper.extractContentFromNode(image),
             src = image.src,
-            pCont = window.location.href;
+            pCont = _PUNDIT.tripleComposer.getSafePageContext();
         
         if (pCont.indexOf('#xpointer')!== -1)
             pCont = pCont.substring(0, pCont.indexOf('#'));

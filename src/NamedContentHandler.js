@@ -156,7 +156,7 @@ dojo.declare("pundit.NamedContentHandler", pundit.BaseComponent, {
         var self = this,
             content,
             content_short,
-            pCont = window.location.href,
+            pCont = _PUNDIT.tripleComposer.getSafePageContext(),
             item,
             namedContentID = dojo.attr(node, "about"),
             xp;

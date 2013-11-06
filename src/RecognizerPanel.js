@@ -171,7 +171,7 @@ dojo.declare("pundit.RecognizerPanel", pundit.ResourcesPanel, {
     },
     saveTriples: function(){
         var self = this;
-        var annotationPageContext = window.location.href,
+        var annotationPageContext = _PUNDIT.tripleComposer.getSafePageContext(),
             b = new pundit.TriplesBucket();
 
         // Tags triples
@@ -258,7 +258,7 @@ dojo.declare("pundit.RecognizerPanel", pundit.ResourcesPanel, {
         }
                 
         if (!tooltip_viewer.isTempXpointer(self.target)){
-            if (self.target !== window.location.href)
+            if (self.target !== _PUNDIT.tripleComposer.getSafePageContext())
                 tooltip_viewer.tempXpointers.push(self.target);
                 //tooltip_viewer.refreshAnnotations();
                 // DEBUG: not sure we can avoid the refreshAnnotations() process

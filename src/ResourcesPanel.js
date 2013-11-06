@@ -464,11 +464,8 @@ dojo.declare("pundit.ResourcesPanel", pundit.BasePanel, {
             label: 'Show in origin page',
             showIf: function(xp) {
                 
-                var item = _PUNDIT.items.getItemByUri(xp),
-                    pCont = window.location.href;
-                    if (pCont.indexOf('#xpointer') !== -1)
-                        pCont = pCont.substring(0, pCont.indexOf('#'));
-                    
+                var item = _PUNDIT.items.getItemByUri(xp);
+
                 if ((typeof item !== 'undefined') 
                     && (typeof tooltip_viewer.xpointersAnnotationsId[xp] === 'undefined')
                     && ((dojo.indexOf(item.rdftype, ns.fragments.text) !== -1) || (dojo.indexOf(item.rdftype, ns.image) !== -1))){

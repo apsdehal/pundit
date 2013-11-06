@@ -163,7 +163,7 @@ dojo.declare("pundit.TextFragmentHandler", pundit.BaseComponent, {
             content = self.helper.extractContentFromRange(range),
             content_short = content.length > 50 ? content.substr(0,50)+' ..' : content,
             xp = self.range2xpointer(self.dirtyRange2cleanRange(range)),
-            pCont = window.location.href,
+            pCont = _PUNDIT.tripleComposer.getSafePageContext(),
             item;
         
         // If window location is an xpointer of a selected fragment
@@ -188,43 +188,6 @@ dojo.declare("pundit.TextFragmentHandler", pundit.BaseComponent, {
         return item;
     }, // createItemFromRange()
     
-    //TODO SIMONE?
-    //this function take the item content and label using the last selected range
-    //and not from the range corresponding to the xpointer
-    //Currenlty a function to pass from an xpointer to a range is missing (or I can't find it)
-    //Is there any other way to take the node contents from an xpointer?
-    //TODO: DO NOT USE OUTSIDE OF THIS CLASS
-    /*
-    createItemFromXpointer: function(xp) {
-        var self = this,
-            content = self.helper.extractContentFromRange(self.lastSelectedRange),
-            content_short = content.length > 50 ? content.substr(0,50)+' ..' : content,
-            pCont = window.location.href,
-            item;
-        
-        // If window location is an xpointer of a selected fragment
-        // don't consider the fragment!!
-        if (pCont.indexOf('#xpointer') !== -1)
-            pCont = pCont.substring(0, pCont.indexOf('#'));
-        
-        // Create the item along its bucket
-        item = {
-            type: ['subject'],
-            rdftype: [ns.fragments.text],
-            label: content_short,
-            description: content,
-            value: xp,
-            isPartOf: xp.split('#')[0],
-            pageContext: pCont
-        }
-        item.rdfData = semlibItems.createBucketForTextFragment(item).bucket;
-        
-        self.log('Created an item from xpointer with label: '+content_short);
-        return item;
-    }, // createItemFromXpointer()
-    */
-    
-    
     // Computes a clean xpointer from the range selected by the user
     range2xpointer: function(range) {
         var self = this,
@@ -247,7 +210,7 @@ dojo.declare("pundit.TextFragmentHandler", pundit.BaseComponent, {
     // gives window location
     getContentURLFromXPath: function(xpath) {
         var self = this,
-            contentUrl = window.location.href,
+            contentUrl = _PUNDIT.tripleComposer.getSafePageContext(),
             index = xpath.indexOf('DIV[@about=\''),
             tagName = "about";
 

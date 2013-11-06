@@ -466,7 +466,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
 
         var relXps = [];
         for (var i = m[ns.pundit_hasTarget].length; i--;) {
-            if (m[ns.pundit_hasTarget][i]['value'] !== window.location.href)
+            if (m[ns.pundit_hasTarget][i]['value'] !== _PUNDIT.tripleComposer.getSafePageContext())
                 relXps.push(m[ns.pundit_hasTarget][i]['value']);
         }
 
@@ -1227,7 +1227,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
     
     showAnnotationOnLoad: function() {
         var self = this,
-            uri = window.location.href,
+            uri = _PUNDIT.tripleComposer.getSafePageContext(),
             query = uri.substring(uri.indexOf("?") + 1, uri.length);
         
         if (self._onLoadAnnotationShown)
@@ -1640,7 +1640,7 @@ dojo.declare("pundit.TooltipAnnotationViewer", pundit.BaseComponent, {
                         else
                             self.xpointersAnnotationsId[val].push(ann_id);
                     
-                    } else if (val === window.location.href){
+                    } else if (val === _PUNDIT.tripleComposer.getSafePageContext()){
                         //If the target of the annotation is the page than attach the annotation to 
                         //a virtual node on top of the page so that the annotation appear as first  
                         if (dojo.indexOf(self.annIds, ann_id) === -1)

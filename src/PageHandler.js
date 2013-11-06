@@ -76,7 +76,7 @@ dojo.declare("pundit.PageHandler", pundit.BaseComponent, {
             name: 'AddPageToMyItems',
             label: 'Add This Page to My Items',
             showIf: function() {
-                var item = _PUNDIT['items'].itemContainers.MyItems.getItemFromUri(window.location.href);
+                var item = _PUNDIT['items'].itemContainers.MyItems.getItemFromUri(_PUNDIT.tripleComposer.getSafePageContext());
                 return (typeof(item) === 'undefined');
             },
             onclick: function() {
@@ -96,7 +96,7 @@ dojo.declare("pundit.PageHandler", pundit.BaseComponent, {
                 return true;
             },
             onclick: function() {
-                var item = _PUNDIT['items'].getItemByUri(window.location.href);
+                var item = _PUNDIT['items'].getItemByUri(_PUNDIT.tripleComposer.getSafePageContext());
                 if (typeof(item) === 'undefined')
                     item =_PUNDIT['pageHandler'].createItemFromPage();
 
@@ -113,7 +113,7 @@ dojo.declare("pundit.PageHandler", pundit.BaseComponent, {
         var self = this,
             item = {};
         item = self.getPageMetadata();
-        item.value = window.location.href;
+        item.value = _PUNDIT.tripleComposer.getSafePageContext();
         item.label = document.title || "No title";
         if (typeof item.description === 'undefined'){
             item.description = item.label;

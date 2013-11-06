@@ -287,7 +287,7 @@ dojo.declare("pundit.CommentTagPanel", pundit.RecognizerPanel, {
     //Save user created triples
     saveTriples: function(){
         var self = this,
-            annotationPageContext = window.location.href,
+            annotationPageContext = _PUNDIT.tripleComposer.getSafePageContext(),
             comment = self.parseInputText(dojo.byId('pundit-ctp-comment-input')),
             b = new pundit.TriplesBucket();
 
@@ -303,9 +303,6 @@ dojo.declare("pundit.CommentTagPanel", pundit.RecognizerPanel, {
         if (!b.isEmpty()) {
 	        self.log('Saving triples json: ' + dojo.toJson(b.getTalisJson()));
             
-            
-            //var targets = [];
-            //if (self.target !== window.location.href)
             var targets = [self.target];
             
             //TODO: hack to support Image Fragment annotation. If is a a n image fragment we also add the parent image as target

@@ -663,7 +663,7 @@ dojo.declare("pundit.ImageAnnotationPanel", pundit.BasePanel, {
             //Add a pundit-image-content for the images (so that you can handle different image resolution)
             //In this case use this as isPartOf (otherwise use the uri of the image)
             isPartOf: self.imageSrc,
-            pageContext: window.location.href,
+            pageContext: _PUNDIT.tripleComposer.getSafePageContext(),
             selectors: selectors
         };
         //self.createdShapes = [];

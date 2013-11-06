@@ -192,9 +192,9 @@ dojo.declare("pundit.MyItems", pundit.Items, {
             label: 'Show in origin page',
             showIf: function(item) {
                 
-                var pCont = window.location.href;
-                    if (pCont.indexOf('#xpointer') !== -1)
-                        pCont = pCont.substring(0, pCont.indexOf('#'));
+                var pCont = _PUNDIT.tripleComposer.getSafePageContext();
+                if (pCont.indexOf('#xpointer') !== -1)
+                    pCont = pCont.substring(0, pCont.indexOf('#'));
                     
                 if ((typeof item !== 'undefined') 
                     && (typeof tooltip_viewer.xpointersAnnotationsId[item.value] === 'undefined')
@@ -256,7 +256,7 @@ dojo.declare("pundit.MyItems", pundit.Items, {
 
         // If the whole URL in the browser's location input does not
         // contain a #, dont do anything
-        var pageLocation = decodeURIComponent(window.location.href);
+        var pageLocation = decodeURIComponent(_PUNDIT.tripleComposer.getSafePageContext());
         if (pageLocation.indexOf('#') === -1)
             return;
             
