@@ -266,29 +266,8 @@ dojo.declare("pundit.ImageAnnotationPanel", pundit.BasePanel, {
         
         //Cannot use stage event for this... For some weird reason some event are lost...
         dojo.connect(dojo.byId("pundit-image-annotation-zoom"),'onclick', function(){
-            //console.log('STAGE: ' + self.stage.getWidth() + ', ' + self.stage.getHeight() + ', ' + self.stage.getScale().x);
-            var scale = self.stage.getScale();
-            scale.x += self.deltaScale;
-            scale.y += self.deltaScale;
-            
-            self.stage.setWidth(parseInt(self.stage.getWidth() * (1 + self.deltaScale)));
-            self.stage.draw();
-            self.stage.setHeight(parseInt(self.stage.getHeight() * (1 + self.deltaScale)));
-            self.stage.setScale({x:self.stage.getWidth()/self.iw,y:self.stage.getHeight()/self.ih});
-            
-            self.centerCanvasContainer();
-            
-            //TODO THis has to be done after centering the image
-            //Fix this to scrool!
-//            self.stage.setDragBounds({
-//                left:(self.containerSize.w - dim.width * scale.x),
-//                right: 0,
-//                top: (self.containerSize.h - dim.height * scale.y),
-//                bottom: 0
-//            });
-            
-            self.updateShapeRendering(scale.x);
-            self.stage.draw();
+            self.zoomIn();
+
             
             _PUNDIT.ga.track('gui-button', 'click', 'pundit-image-annotation-zoom');
             
@@ -756,5 +735,31 @@ dojo.declare("pundit.ImageAnnotationPanel", pundit.BasePanel, {
                 top: 0
             });
         }
+    },
+    zoomIn: function() {
+        var self= this;
+        //console.log('STAGE: ' + self.stage.getWidth() + ', ' + self.stage.getHeight() + ', ' + self.stage.getScale().x);
+        var scale = self.stage.getScale();
+        scale.x += self.deltaScale;
+        scale.y += self.deltaScale;
+        
+        self.stage.setWidth(parseInt(self.stage.getWidth() * (1 + self.deltaScale)));
+        self.stage.draw();
+        self.stage.setHeight(parseInt(self.stage.getHeight() * (1 + self.deltaScale)));
+        self.stage.setScale({x:self.stage.getWidth()/self.iw,y:self.stage.getHeight()/self.ih});
+        
+        self.centerCanvasContainer();
+        
+        //TODO THis has to be done after centering the image
+        //Fix this to scrool!
+//            self.stage.setDragBounds({
+//                left:(self.containerSize.w - dim.width * scale.x),
+//                right: 0,
+//                top: (self.containerSize.h - dim.height * scale.y),
+//                bottom: 0
+//            });
+            
+        self.updateShapeRendering(scale.x);
+        self.stage.draw();
     }
 });

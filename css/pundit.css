@@ -812,12 +812,12 @@ body.pundit-gui-hidden #pundit-aw {
 	opacity: 0.5;
 }
 #pundit-aw .pundit-aw-panel .pundit-aw-panel-header span.pundit-icon-close {
-	background: url('img/cross-white.png') no-repeat 2px 1px;	
+    background: url('img/cross-white.png') no-repeat 2px 1px;   
 }
 #pundit-aw .pundit-aw-panel .pundit-aw-panel-header span.pundit-icon-close:hover {
-	background: url('img/cross-white.png') no-repeat 2px 1px rgba(17, 169, 254, 0.8);	
-	opacity: 1.0;
-	cursor: pointer;
+    background: url('img/cross-white.png') no-repeat 2px 1px rgba(17, 169, 254, 0.8);   
+    opacity: 1.0;
+    cursor: pointer;
 }
 #pundit-aw .pundit-aw-panel .pundit-aw-panel-header span.pundit-icon-collapse.pundit-expanded {
 	background: url('img/chevron.png') no-repeat 2px 2px;	
@@ -2160,7 +2160,7 @@ div.pundit-floating-panel span.pundit-ctp-title{
     font-weight: bold;
 }
 div.pundit-floating-panel span.pundit-icon-close {
-    background: url('img/cross-white.png') no-repeat 0px 0px;	
+    background: url('img/cross-white.png') no-repeat 0px 0px;   
     opacity: 0.75;
     display: block;
     float: right;
@@ -2688,6 +2688,16 @@ section.pundit-rp-literal-text {
     width: 16px;
     height: 16px;
 }
+.pundit-fp span.pundit-icon-fullscreen {
+    background: url('img/chevron.png') no-repeat 0px 0px;
+    opacity: 0.75;
+    display: block;
+    float: right;
+    width: 16px;
+    height: 16px;
+    margin-right: 10px
+}
+
 /*The comment tag panel close button*/
 .pundit-fp-close{
     padding-right:4px;
