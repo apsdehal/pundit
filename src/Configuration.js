@@ -379,7 +379,7 @@ dojo.declare("pundit.Configuration", pundit.BaseComponent, {
                 active: true,
                 notebookSharing: true,
                 notebookActivation: true,
-                showFilteringOptions: true,
+                showFilteringOptions: false,
                 defaultFilteringOption: 'all', // valid options: 'all' | 'active'
                 activateFromAnnotations: false,
                 askBaseURL: 'http://demo.ask.thepund.it/#/myNotebooks/',
