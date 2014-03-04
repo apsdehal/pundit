@@ -76,6 +76,7 @@ dojo.declare("pundit.BasePanel", pundit.BaseComponent, {
         self.initBaseHTML();
         
         //Adjust width and height of the container
+        
         dojo.style(dojo.query('#' + self._id + ' ul.pundit-fp-content-list')[0], {
             width:  parseInt(self.width) +  'px'
         });
@@ -84,7 +85,6 @@ dojo.declare("pundit.BasePanel", pundit.BaseComponent, {
                 height: self.height + 'px'
             });
         }
-            
         
         dojo.style(dojo.query('#' + self._id + ' .pundit-fp-content-container')[0], 'width', self.width - 10 + 'px');
 
@@ -127,7 +127,12 @@ dojo.declare("pundit.BasePanel", pundit.BaseComponent, {
             self._id = 'pundit-fp-' + Math.rand(100);
         
         var c ='<div id="' + self._id + '" class="pundit-base pundit-fp pundit-hidden pundit-disable-annotation pundit-stop-wheel-propagation">';
-        c += '  <div class="pundit-fp-header"><span class="pundit-fp-title">' + self.title + '</span><span class="pundit-fp-close pundit-icon-close"></span><span class="pundit-fp-fullscreen pundit-icon-fullscreen"></span></div>';
+        c += '  <div class="pundit-fp-header"><span class="pundit-fp-title">' + self.title + '</span>';
+        c += '     <span class="pundit-fp-close pundit-icon-close"></span>';
+
+        // TODO: activate again the full screen? There 2 while() which freeze browsers
+        // c += '     <span class="pundit-fp-fullscreen pundit-icon-fullscreen"></span>';
+        c += '</div>';
         c += '  <ul class="pundit-fp-content-list pundit-horizontal-list">';
         c += '      <li>';
         c += '          <div class="pundit-fp-content-container pundit-fp-container">';
@@ -194,6 +199,9 @@ dojo.declare("pundit.BasePanel", pundit.BaseComponent, {
         
         dojo.connect(dojo.query('#' + self._id+ ' .pundit-fp-fullscreen')[0], 'onclick', function(){
             var winW = 600, winH = 400;
+            /*
+            
+            // TODO: avoiding this to go fullscreen, the thing will just crash browsers :|
             if (document.body && document.body.offsetWidth) {
                 winW = document.body.offsetWidth;
                 winH = document.body.offsetHeight;
@@ -220,7 +228,10 @@ dojo.declare("pundit.BasePanel", pundit.BaseComponent, {
             var container = dojo.query('#' + self._id + ' .pundit-fp-content-container.pundit-fp-container');
             container.style('width', winW - 23 - 10);
             container.style('height', winH - 30);
-
+            */
+                /*
+                
+            // TODO: why is this going full screen?
             if (dojo.query('#' + self._id + '-image-annotation-container').length > 0) {
                 console.log('fullscreen');
 
@@ -233,10 +244,11 @@ dojo.declare("pundit.BasePanel", pundit.BaseComponent, {
                 kineticjs.style('height', winH - 30);
 
                 var image_canvas = dojo.query('#' + self._id + '-image-annotation-container .kineticjs-content canvas');
-                while ((image_canvas.attr('width')[0] < (winW - 143)) && (image_canvas.attr('height')[0] < (winH - 70))) {
-                    self.zoomIn();
-                }
+                // while ((image_canvas.attr('width')[0] < (winW - 143)) && (image_canvas.attr('height')[0] < (winH - 70))) {
+                //     self.zoomIn();
+                // }
             }
+                */
 
         });
         
@@ -278,8 +290,11 @@ dojo.declare("pundit.BasePanel", pundit.BaseComponent, {
                     top:y }
                 );
         }
+        dojo.style(dojo.query('#' + self._id + '.pundit-fp')[0], 'opacity',1);
+
+        /*
+        // TODO: this pushes the window to full screen.. but breaks browsers :P
         setTimeout(function(){
-            dojo.style(dojo.query('#' + self._id + '.pundit-fp')[0], 'opacity',1);
 
             if (dojo.query('#' + self._id + '-image-annotation-container').length > 0) {
                 console.log('show');
@@ -295,11 +310,12 @@ dojo.declare("pundit.BasePanel", pundit.BaseComponent, {
                 kineticjs.style('height', winH - 30);
 
                 var image_canvas = dojo.query('#' + self._id + '-image-annotation-container .kineticjs-content canvas');
-                while ((image_canvas.attr('width')[0] < (winW - 143)) && (image_canvas.attr('height')[0] < (winH - 70))) {
-                    self.zoomIn();
-                }
+                // while ((image_canvas.attr('width')[0] < (winW - 143)) && (image_canvas.attr('height')[0] < (winH - 70))) {
+                //     self.zoomIn();
+                // }
             }
         },10);
+        */
         
         //dijit.focus(dojo.byId('pundit-ctp-comment-input'));
     },
