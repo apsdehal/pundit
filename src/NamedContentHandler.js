@@ -109,11 +109,15 @@ dojo.declare("pundit.NamedContentHandler", pundit.BaseComponent, {
                     load: (function(item) {
                         return function(ld) {
                             var label = jsonld.getValues(ld, 'http://www.w3.org/2000/01/rdf-schema#label')[0],
-                                types = jsonld.getValues(ld, '@type');
+                                types = jsonld.getValues(ld, '@type'),
+                                description = jsonld.getValues(ld, 'http://purl.org/dc/elements/1.1/description')[0],
+                                image = jsonld.getValues(ld, 'http://xmlns.com/foaf/0.1/depiction')[0];
 
                             for (var l=types.length; l--;) 
                                 item.rdftype.push(types[l]);
                             item.label = label;
+                            item.description = description;
+                            item.image = description;
                             
                             item.rdfData = semlibItems.createBucketForNamedContent(item).bucket;
                             semlibItems.addItem(item, true);
