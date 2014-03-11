@@ -83,7 +83,7 @@ dojo.declare("pundit.NamedContentHandler", pundit.BaseComponent, {
                 if (typeof(metadatas) !== "undefined" && metadatas.length > 0) {
                     var metadata = metadatas[0];
                 }
-                if (typeof(metadatas) === "undefined" || typeof(metadata.getAttribute('rel')) === "undefined" || typeof(metadata.getAttribute('rel')) !== 'http://purl.org/pundit/ont/json-metadata') {
+                if (typeof(metadatas) === "undefined" || typeof(metadata.getAttribute('rel')) === "undefined" || metadata.getAttribute('rel') !== 'http://purl.org/pundit/ont/json-metadata') {
                     self.log('Skipping named content. No JSON metadata for'+ item.value);
                     return;
                 }
