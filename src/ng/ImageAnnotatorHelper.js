@@ -154,11 +154,11 @@ dojo.declare("pundit.ng.ImageAnnotatorHelper", pundit.BaseComponent, {
             ]
         };
         
-        dojo.place('<div ng-app="image_annotator"><image-annotator conf-name="PunditIAConf"></image-annotator></div>', dojo.query('body')[0], 'first');
+        dojo.place('<div ng-app="ImageAnnotator"><image-annotator conf-name="PunditIAConf"></image-annotator></div>', dojo.query('body')[0], 'first');
 
         // TODO: why do i need to bootstrap manually?!!
         if (typeof(IA) === 'undefined')
-            angular.bootstrap(document, ['image_annotator']);
+            angular.bootstrap(document, ['ImageAnnotator']);
         
     }
 });
