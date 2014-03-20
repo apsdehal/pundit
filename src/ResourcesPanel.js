@@ -183,7 +183,14 @@ dojo.declare("pundit.ResourcesPanel", pundit.BasePanel, {
             c += '                      <div>';
             c += '                          <input class="pundit-rp-search-input pundit-dialog-input" row="1" placeholder="...type here" value="" type="text"/>';
             c += '                          &nbsp; <button class="pundit-rp-add-literal" >Literal</button>';
-            c += '                          <button class="pundit-rp-add-date" >Date</button>';
+            c += '                          <button class="pundit-rp-add-date">Date</button>';
+
+            // Add the Korbo Entity Editor button to the suggestions panel, only
+            // if configured and if it is not a predicate suggestion panel
+            if (_PUNDIT.config.isModuleActive('pundit.ng.EntityEditorHelper') && self.opts.field !== "predicate") {
+                c += '                          <button class="pundit-rp-korbo">Korbo</button>';
+            }
+                
             c += '                      </div>';
             c += '                      <div class="pundit-rp-suggestions"></div>';
             c += '                  </div>';
@@ -255,10 +262,19 @@ dojo.declare("pundit.ResourcesPanel", pundit.BasePanel, {
 
         }
     },
-	
-    //Init the behaviors of the component
+
+    // Init the behaviors of the component
     initBehaviors: function() {
         var self = this;
+        
+        // Add the Korbo Entity Editor button to the suggestions panel, if needed
+        if (_PUNDIT.config.isModuleActive('pundit.ng.EntityEditorHelper') && self.opts.field !== "predicate") {
+            dojo.connect(dojo.query('#' + self._id + ' .pundit-rp-korbo')[0], 'onclick', function(e) {
+                var keyword = dojo.query('#' + self._id + ' .pundit-rp-search-input')[0].value;
+                _PUNDIT.ngEE.openEE(keyword, self.opts.field);
+            });
+        }
+        
         
         //TODO Do I need a callback to better handle this?
         dojo.connect(dojo.query('body')[0], (!dojo.isMozilla ? "onmousewheel" : "DOMMouseScroll"), function(e) {
@@ -533,14 +549,13 @@ dojo.declare("pundit.ResourcesPanel", pundit.BasePanel, {
     * @param term {string} the searched term to be shown in the search input
     */
     //TODO Move also position in the params object?
-    load:function(itemsObject){
+    load: function(itemsObject){
         var self = this;
         self.clearPanel(); //This should hide all the containers
         
         for (var i in itemsObject){
             if (itemsObject[i].items.length >0){
                 dojo.addClass(dojo.byId(self._id + '-container-suggestions-' + i), 'pundit-visible');
-                //for (var j in itemsObject[i].items){
                 for (var j = itemsObject[i].items.length; j--;){
                     self['itemsDnD' + i].insertNodes(false, [itemsObject[i].items[j]]);
                 }

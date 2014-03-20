@@ -62,7 +62,8 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
         self.saver = new pundit.AnnotationWriter();
         self.subjSuggestionPanel = new pundit.ResourcesPanel({
             name: 'subj-suggestions',
-            searchType: 'filter'
+            searchType: 'filter',
+            field: 'subject'
         });
         self.subjSuggestionPanel.onItemAdded(function(item){
             self.addItem(item);
@@ -72,6 +73,7 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
         // TODO: check if selectors are active
         self.objSuggestionPanel = new pundit.ResourcesPanel({
             name: 'obj-suggestions',
+            field: 'object',
             searchType: 'filter',
             namedEntitiesSources: _PUNDIT.config.activeEntitySources
         });
@@ -83,6 +85,7 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
         
         self.propSuggestionPanel = new pundit.ResourcesPanel({
             name: 'pred-suggestions',
+            field: 'predicate',
             searchType: 'filter'
         });
         self.propSuggestionPanel.onItemAdded(function(item){

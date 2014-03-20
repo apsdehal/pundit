@@ -406,6 +406,10 @@ dojo.declare("pundit.Init", pundit.BaseComponent, {
             p['ngIA'] = new pundit.ng.ImageAnnotatorHelper();
         }
 
+        if (p.config.isModuleActive('pundit.ng.EntityEditorHelper')) {
+            dojo.require("pundit.ng.EntityEditorHelper");
+            p['ngEE'] = new pundit.ng.EntityEditorHelper();
+        }
         
         // TODO: x Marco do we have to do this here? Is it related to annotation view? Consolidation?
         // Something else? NOT HERE.

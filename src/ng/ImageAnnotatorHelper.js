@@ -97,14 +97,10 @@ dojo.declare("pundit.ng.ImageAnnotatorHelper", pundit.BaseComponent, {
                 if (self.currentImage !== item.image) {
                     self.currentImage = item.image;
                     self.currentNode = item._originalNode;
-                    console.log('111');
                     IA.callSetImg(item.image);
                 }
-                console.log('2222');
                 
                 IA.callOpen();
-
-                console.log('333');
 
                 return true;
             }
@@ -125,7 +121,8 @@ dojo.declare("pundit.ng.ImageAnnotatorHelper", pundit.BaseComponent, {
                 {
                     label: 'Annotate this fragment',
                     action: function(poly){
-                        console.log('Annotating this fragment', poly);
+                        
+                        self.log('Using a polygon as subject ');
                         var item = self.createItemFromPolygon(poly);
                         
                         tripleComposer.addItemToSubject(item);
@@ -141,7 +138,8 @@ dojo.declare("pundit.ng.ImageAnnotatorHelper", pundit.BaseComponent, {
                     showIf: function(poly){
                         return poly.closed;
                     }
-                },
+                }
+                /*
                 {
                     label: 'Add a comment to this fragment',
                     action: function(poly){
@@ -151,6 +149,7 @@ dojo.declare("pundit.ng.ImageAnnotatorHelper", pundit.BaseComponent, {
                         return poly.closed;
                     }
                 }
+                */
             ]
         };
         
