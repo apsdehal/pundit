@@ -511,15 +511,21 @@ dojo.declare("pundit.NotebookManager", pundit.BasePanel, {
         self.reader.getNotebookMetadata(notebookId, (function(_type){
             return function(id, metadata){
 
+                console.log('Ara che metadata ', metadata);
+                var meta = {};
+                for (var nbURI in metadata) {
+                    meta = metadata[nbURI];
+                }
+
                 var notebook = {
-                    visibility: metadata['http://swickynotes.org/notebook/resource/' + id][ns.notebooks.visibility][0].value,
-                    created:    metadata['http://swickynotes.org/notebook/resource/' + id][ns.notebooks.created][0].value,
-                    creator:    metadata['http://swickynotes.org/notebook/resource/' + id][ns.notebooks.creator][0].value,
-                    creatorName:    metadata['http://swickynotes.org/notebook/resource/' + id][ns.notebooks.creatorName][0].value,
-                    id:         metadata['http://swickynotes.org/notebook/resource/' + id][ns.notebooks.id][0].value,
-                    includes:   metadata['http://swickynotes.org/notebook/resource/' + id][ns.notebooks.includes],
-                    type:       metadata['http://swickynotes.org/notebook/resource/' + id][ns.notebooks.type][0].value,
-                    label:      metadata['http://swickynotes.org/notebook/resource/' + id][ns.notebooks.label][0].value
+                    visibility:  meta[ns.notebooks.visibility][0].value,
+                    created:     meta[ns.notebooks.created][0].value,
+                    creator:     meta[ns.notebooks.creator][0].value,
+                    creatorName: meta[ns.notebooks.creatorName][0].value,
+                    id:          meta[ns.notebooks.id][0].value,
+                    includes:    meta[ns.notebooks.includes],
+                    type:        meta[ns.notebooks.type][0].value,
+                    label:       meta[ns.notebooks.label][0].value
                 };
 
             
