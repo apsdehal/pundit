@@ -511,7 +511,8 @@ dojo.declare("pundit.NotebookManager", pundit.BasePanel, {
         self.reader.getNotebookMetadata(notebookId, (function(_type){
             return function(id, metadata){
 
-                console.log('Ara che metadata ', metadata);
+                // In this response there's an object with 1 key, that key
+                // is the URI of this notebook on the current annotation server
                 var meta = {};
                 for (var nbURI in metadata) {
                     meta = metadata[nbURI];
