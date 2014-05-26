@@ -31,6 +31,12 @@ dojo.declare("pundit.ng.EntityEditorHelper", pundit.BaseComponent, {
         // Korbo2 API endpoint
         endpoint: "http://demo-cloud.api.korbo.org/v1",
         basketID: 1,
+        updateTime: 1000,
+        labelMinLength: 3,
+        copyToKorboBeforeUse: false,
+        visualizeUseButton: ['freebase', 'korbo'],
+        visualizeCopyButton: ['freebase', 'korbo'],
+        visualizeEditButton: true,
 
         // Name of the global object which will be created
         globalObjectName: 'EE',
