@@ -48,6 +48,10 @@ dojo.declare("pundit.ng.EntityEditorHelper", pundit.BaseComponent, {
             dbpedia: false
         },
         
+        useAutocompleteWithSearch: false,
+        useTafonyCompatibility: false,
+        copyToKorboBeforeUse: false,
+        
         types: [
             {
                 label: 'Schema.org place',
@@ -84,6 +88,9 @@ dojo.declare("pundit.ng.EntityEditorHelper", pundit.BaseComponent, {
             basketID: self.opts.basketID,
             globalObjectName : self.opts.globalObjectName,
             useOnlyCallback: true,
+            useAutocompleteWithSearch: self.opts.useAutocompleteWithSearch,
+            useTafonyCompatibility: self.opts.useTafonyCompatibility,
+            copyToKorboBeforeUse: self.opts.copyToKorboBeforeUse,
             onLoad: function(){
                 self.log("Entity Editor fully loaded");
                 self.registerCallbacks();
