@@ -33,7 +33,6 @@ dojo.declare("pundit.ng.EntityEditorHelper", pundit.BaseComponent, {
         basketID: 1,
         updateTime: 1000,
         labelMinLength: 3,
-        copyToKorboBeforeUse: false,
         visualizeUseButton: ['freebase', 'korbo'],
         visualizeCopyButton: ['freebase', 'korbo'],
         visualizeEditButton: true,
@@ -96,7 +95,14 @@ dojo.declare("pundit.ng.EntityEditorHelper", pundit.BaseComponent, {
                 self.registerCallbacks();
             },
             providers: self.opts.providers,
-            type: self.opts.types
+            type: self.opts.types,
+            visualizeUseButton: self.opts.visualizeUseButton,
+            visualizeCopyButton: self.opts.visualizeCopyButton,
+            visualizeEditButton: self.opts.visualizeEditButton,
+            updateTime: self.opts.updateTime,
+            labelMinLength: self.opts.labelMinLength
+            
+            
         };
         
         dojo.place('<div ng-app="KorboEE"><korbo-entity-editor conf-name="PunditEEConf"></korbo-entity-editor></div>', dojo.query('body')[0], 'first');
