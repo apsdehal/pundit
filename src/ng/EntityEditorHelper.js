@@ -101,8 +101,6 @@ dojo.declare("pundit.ng.EntityEditorHelper", pundit.BaseComponent, {
             visualizeEditButton: self.opts.visualizeEditButton,
             updateTime: self.opts.updateTime,
             labelMinLength: self.opts.labelMinLength
-            
-            
         };
         
         dojo.place('<div ng-app="KorboEE"><korbo-entity-editor conf-name="PunditEEConf"></korbo-entity-editor></div>', dojo.query('body')[0], 'first');
