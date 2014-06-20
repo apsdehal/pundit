@@ -146,7 +146,7 @@ dojo.declare("pundit.TripleComposer", pundit.BaseComponent, {
 
         // Adds a new triple row
         dojo.connect(dojo.byId('pundit-tc-add-triple-button'), 'onclick', function() {
-            _PUNDIT.ga.track('gui-button', 'click', '#pundit-tc-add-triple.button');
+            _PUNDIT.ga.track('gui-button', 'click', '#pundit-tc-add-triple-button');
             self.subjSuggestionPanel.hide();
             self.objSuggestionPanel.hide();
             self.propSuggestionPanel.hide();
